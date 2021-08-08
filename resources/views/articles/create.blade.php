@@ -10,14 +10,21 @@
 
                 @include('layouts.errors')
                 <form method="post" action="/">
-                @csrf
+                    @csrf
+                    <div class="form-group">
+                        <label for="articleName">Символьный код</label>
+                        <input type="text" class="form-control" name="slug" id="slug"
+                            value="{{ old('slug') }}">
+                    </div>
                     <div class="form-group">
                         <label for="articleName">Название статьи</label>
-                        <input type="text" class="form-control" name="title" id="articleName" value="{{ old('title') }}">
+                        <input type="text" class="form-control" name="title" id="articleName"
+                            value="{{ old('title') }}">
                     </div>
                     <div class="form-group">
                         <label for="shortDescription">Краткое описание статьи</label>
-                        <input type="text" class="form-control" name="short_description" id="shortDescription" value="{{ old('short_description') }}">
+                        <input type="text" class="form-control" name="short_description" id="shortDescription"
+                            value="{{ old('short_description') }}">
                     </div>
                     <div class="form-group">
                         <label for="description">Детальное описание статьи</label>

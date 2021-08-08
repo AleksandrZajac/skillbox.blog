@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\ArticleRequest;
 use App\Models\Article;
-use Illuminate\Support\Str;
 
 class ArticlesController extends Controller
 {
@@ -15,7 +14,7 @@ class ArticlesController extends Controller
      */
     public function index()
     {
-        $articles = Article::latest()->get();;
+        $articles = Article::latest()->get();
         return view('articles.index', compact('articles'));
     }
 
@@ -35,29 +34,9 @@ class ArticlesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ArticleRequest $request)
     {
-        $this->validate(request(), [
-            'title'  => 'required|min:5|max:100',
-            'short_description' => 'required|max:255',
-            'description'  => 'required',
-        ]);
-
-        $articles = Article::where('title', $request->title)->get();
-
-        $count = count($articles);
-        if ($count) {
-            $count = '-' . ($count + 1);
-        } else {
-            $count = '';
-        }
-
-        $data = $request->input();
-        if (empty($data['slug'])) {
-            $data['slug'] = Str::slug($data['title'], '-') . $count;
-        };
-        $item = new Article($data);
-        $item->save();
+        Article::create(request()->all());
 
         return redirect('/');
     }
