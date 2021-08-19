@@ -18,10 +18,14 @@ use App\Http\Controllers\ContactsController;
 Route::get('/about', function () {
     return view('about');
 });
-Route::get('/', [ArticlesController::class, 'index']);
-Route::post('/', [ArticlesController::class, 'store']);
-Route::get('/articles/create', [ArticlesController::class, 'create']);
-Route::get('/articles/{slug}', [ArticlesController::class, 'show']);
+Route::get('/', [ArticlesController::class, 'index'])->name('articles.index');
+Route::post('/', [ArticlesController::class, 'store'])->name('articles.store');
+Route::get('/articles/create', [ArticlesController::class, 'create'])->name('articles.create');
+Route::get('/articles/{slug}', [ArticlesController::class, 'show'])->name('articles.show');
+Route::patch('/articles/{slug}', [ArticlesController::class, 'update'])->name('articles.update');
+Route::get('/articles/{slug}/edit', [ArticlesController::class, 'edit'])->name('articles.edit');
+Route::delete('/articles/{slug}', [ArticlesController::class, 'delete'])->name('articles.delete');
+// Route::resource('/articles', 'App\Http\Controllers\ArticlesController');
 Route::get('/contacts', [ContactsController::class, 'create']);
 Route::post('/contacts', [ContactsController::class, 'store']);
 Route::get('/admin/feedback', [ContactsController::class, 'index']);

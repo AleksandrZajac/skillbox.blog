@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ArticleRequest;
 use App\Models\Article;
+use App\Http\Requests\ArticleRequest;
+use Illuminate\Http\Request;
 
 class ArticlesController extends Controller
 {
@@ -25,7 +26,8 @@ class ArticlesController extends Controller
      */
     public function create()
     {
-        return view('articles.create');
+        $article = new Article();
+        return view('articles.create', compact('article'));
     }
 
     /**
@@ -37,6 +39,7 @@ class ArticlesController extends Controller
     public function store(ArticleRequest $request)
     {
         Article::create(request()->all());
+        // dd(Article::create($request->all()));
 
         return redirect('/');
     }
@@ -47,11 +50,10 @@ class ArticlesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($slug)
+    public function show(Article $article)
     {
-        $item = Article::where('slug', $slug)->get();
-
-        return view('articles.show', compact('item'));
+        dd($article);
+        return view('articles.show', compact('article'));
     }
 
         /**
@@ -62,7 +64,7 @@ class ArticlesController extends Controller
      */
     public function edit(Article $article)
     {
-        //
+        return view('task.edit', compact('article'));
     }
 
     /**
@@ -74,7 +76,19 @@ class ArticlesController extends Controller
      */
     public function update(ArticleRequest $request, Article $article)
     {
-        //
+        dd(__METHOD__, $request->all(), $article->slug);
+        // $form_data = array(
+        //     'user_id' => $user_id,
+        //     'order_number'    =>  $request->order_number,
+        // );
+        // Article::find($id)->update($form_data);
+        // dd($article->id);
+        $asd = $article->update($request->all());
+
+        dd($asd);
+
+
+        return redirect('/');
     }
 
     /**
@@ -83,9 +97,12 @@ class ArticlesController extends Controller
      * @param  \App\Models\Article  $article
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Article $article)
+    public function destroy($id)
     {
-        //
+        $item = Article::find($id);
+        $item->delete();
+
+        return redirect('/articles');
     }
 
 }

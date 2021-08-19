@@ -10,9 +10,10 @@
             </h3>
 
             <div class="blog-post">
-                <h2 class="blog-post-title">{{ $item[0]->title }}</h2>
-                {{ $item[0]->created_at->toFormattedDateString() }}
-                <p>{{ $item[0]->description }}</p>
+                <h2 class="blog-post-title">{{ $article->title }}</h2>
+                {{ $article->created_at->toFormattedDateString() }}
+                <p>{{ $article->description }}</p>
+                <a class="p-2 text-muted" href="{{ route('articles.edit', $article->id) }}">Редактировать статью</a>
                 <hr>
             </div><!-- /.blog-post -->
         </div>
