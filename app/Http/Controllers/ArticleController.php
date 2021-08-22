@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use App\Http\Requests\ArticleRequest;
-use Illuminate\Http\Request;
 
-class ArticlesController extends Controller
+class ArticleController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,6 +15,7 @@ class ArticlesController extends Controller
     public function index()
     {
         $articles = Article::latest()->get();
+
         return view('articles.index', compact('articles'));
     }
 
@@ -27,36 +27,34 @@ class ArticlesController extends Controller
     public function create()
     {
         $article = new Article();
-        return view('articles.create', compact('article'));
+        return view('articles.edit', compact('article'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\ArticleReques  $request
      * @return \Illuminate\Http\Response
      */
     public function store(ArticleRequest $request)
     {
-        Article::create(request()->all());
-        // dd(Article::create($request->all()));
+        Article::create($request->all());
 
-        return redirect('/');
+        return redirect()->route('articles.index')->with('success', 'Post created successfully.');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Article  $article
      * @return \Illuminate\Http\Response
      */
     public function show(Article $article)
     {
-        dd($article);
         return view('articles.show', compact('article'));
     }
 
-        /**
+    /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Article  $article
@@ -64,45 +62,34 @@ class ArticlesController extends Controller
      */
     public function edit(Article $article)
     {
-        return view('task.edit', compact('article'));
+        return view('articles.edit',compact('article'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\ArticleRequest  $request
      * @param  \App\Models\Article  $article
      * @return \Illuminate\Http\Response
      */
     public function update(ArticleRequest $request, Article $article)
     {
-        dd(__METHOD__, $request->all(), $article->slug);
-        // $form_data = array(
-        //     'user_id' => $user_id,
-        //     'order_number'    =>  $request->order_number,
-        // );
-        // Article::find($id)->update($form_data);
-        // dd($article->id);
-        $asd = $article->update($request->all());
+        $article->update($request->all());
 
-        dd($asd);
-
-
-        return redirect('/');
+        return redirect()->route('articles.index')->with('success','Post updated successfully');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Article  $article
+      * @param  \App\Models\Article  $article
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Article $article)
     {
-        $item = Article::find($id);
-        $item->delete();
+        $article->delete();
 
-        return redirect('/articles');
+        return redirect()->route('articles.index')
+                        ->with('success','post deleted successfully');
     }
-
 }

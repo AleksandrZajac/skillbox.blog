@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\Article;
-use Illuminate\Http\Request;
 
 class ArticleRequest extends FormRequest
 {
@@ -23,10 +22,9 @@ class ArticleRequest extends FormRequest
      *
      * @return array
      */
-    public function rules(Request $request)
+    public function rules()
     {
-        $item = Article::where('slug', $request->slug)->get();
-        // dd($item);
+        $item = Article::where('id', (int)request()->id)->get();
 
         $rules = [
             'slug' => 'required|unique:articles|regex:/[a-zA-Z0-9_-]/',
@@ -35,7 +33,7 @@ class ArticleRequest extends FormRequest
             'description'  => 'required',
         ];
 
-        if (isset($item[0]->id)) {
+        if ($item->count() !== 0 && $item[0]->slug === request()->slug) {
             $rules = [
                 'slug' => 'required|regex:/[a-zA-Z0-9_-]/',
                 'title'  => 'required|min:5|max:100',

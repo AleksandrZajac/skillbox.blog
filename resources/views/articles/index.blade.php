@@ -8,7 +8,11 @@
             <h3 class="pb-3 mb-4 font-italic border-bottom">
                 Статьи
             </h3>
-
+            @if ($message = Session::get('success'))
+            <div class="alert alert-success">
+                <p>{{ $message }}</p>
+            </div>
+            @endif
             <div class="blog-post">
                 @foreach($articles as $article)
                 <h2 class="blog-post-title"><a href="{{ route('articles.show', $article->slug) }}">{{ $article->title }}</a></h2>
@@ -17,8 +21,8 @@
                 <p>{{ $article->short_description }}</p>
                 @endforeach
                 <hr>
-            </div><!-- /.blog-post -->
-        </div><!-- /.row -->
-</main><!-- /.container -->
+            </div>
+        </div>
+</main>
 
 @endsection

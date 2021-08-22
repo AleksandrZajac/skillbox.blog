@@ -13,11 +13,16 @@
                 <h2 class="blog-post-title">{{ $article->title }}</h2>
                 {{ $article->created_at->toFormattedDateString() }}
                 <p>{{ $article->description }}</p>
-                <a class="p-2 text-muted" href="{{ route('articles.edit', $article->id) }}">Редактировать статью</a>
+                <h5><a class="btn btn-primary" href="{{ route('articles.edit', $article->slug) }}">Редактировать статью<a></h5>
+                <form action="{{ route('articles.destroy', $article->slug)}}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button class="btn btn-danger" type="submit">Стереть задачу</button>
+                </form>
                 <hr>
-            </div><!-- /.blog-post -->
+            </div>
         </div>
-    </div><!-- /.row -->
-</main><!-- /.container -->
+    </div>
+</main>
 
 @endsection
