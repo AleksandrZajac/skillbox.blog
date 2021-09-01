@@ -3,10 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\Tag;
 use App\Http\Requests\ArticleRequest;
+use App\Services\TagsSynchronizer;
 
 class ArticleController extends Controller
 {
+    private $tagsSynchronizer;
+
+    public function __construct(TagsSynchronizer $tagsSynchronizer)
+    {
+        $this->tagsSynchronizer = $tagsSynchronizer;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +22,7 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::latest()->get();
+        $articles = Article::with('tags')->latest()->get();
 
         return view('articles.index', compact('articles'));
     }
@@ -27,6 +35,7 @@ class ArticleController extends Controller
     public function create()
     {
         $article = new Article();
+
         return view('articles.edit', compact('article'));
     }
 
@@ -38,7 +47,19 @@ class ArticleController extends Controller
      */
     public function store(ArticleRequest $request)
     {
-        Article::create($request->all());
+        $article = new Article();
+        $article->slug = request('slug');
+        $article->title = request('title');
+        $article->short_description = request('short_description');
+        $article->description = request('description');
+        $article->is_published = (bool)request('is_published');
+
+        $article->save();
+
+        $tags = collect(explode(',', request('tags')))->keyBy(function ($item) { return $item; });
+
+        $this->tagsSynchronizer->sync($tags, $article);
+
 
         return redirect()->route('articles.index')->with('success', 'Post created successfully.');
     }
@@ -75,6 +96,10 @@ class ArticleController extends Controller
     public function update(ArticleRequest $request, Article $article)
     {
         $article->update($request->all());
+
+        $tags = collect(explode(',', request('tags')))->keyBy(function ($item) { return $item; });
+
+        $this->tagsSynchronizer->sync($tags, $article);
 
         return redirect()->route('articles.index')->with('success','Post updated successfully');
     }

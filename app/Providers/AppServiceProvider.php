@@ -3,8 +3,6 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Models\Article;
-use App\Observers\ArticleObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,7 +13,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->singleton(App\Services\TagsSynchronizer::class, function () {
+            return new App\Services\TagsSynchronizer();
+        });
     }
 
     /**
@@ -25,6 +25,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        view()->composer('layouts.sidebar', function ($view) {
+
+            $view->with('tagsCloud', \App\Models\Tag::tagsCloud());
+
+        });
     }
 }

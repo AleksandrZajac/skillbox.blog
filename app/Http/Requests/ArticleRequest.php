@@ -27,7 +27,7 @@ class ArticleRequest extends FormRequest
     public function rules()
     {
         return [
-            'slug' => 'required|unique:articles,slug,'. $this->id .'|regex:/[a-zA-Z0-9_-]/',
+            'slug' => 'required|unique:articles,slug,'. $this->id .'|not_regex:/[а-яА-Я]/|alpha_dash',
             'title'  => 'required|min:5|max:100',
             'short_description' => 'required|max:255',
             'description'  => 'required',
@@ -42,7 +42,7 @@ class ArticleRequest extends FormRequest
     public function messages()
     {
       return [
-        'slug.regex'  => 'The field must consist only of Latin characters, numbers and symbols of dash and underscore.',
+        'slug.not_regex'  => 'The field must consist only of Latin characters.',
       ];
     }
 }

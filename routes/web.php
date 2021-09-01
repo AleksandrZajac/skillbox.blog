@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ContactsController;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\TagController;
 use App\Models\Article;
 
 /*
@@ -19,6 +20,9 @@ use App\Models\Article;
 Route::get('/about', function () {
     return view('about');
 });
+
+Route::get('/articles/tags/{tag}', [TagController::class, 'index'])->name('tags.index');
+
 Route::get('/', [ArticleController::class, 'index'])->name('articles.index');
 Route::post('/', [ArticleController::class, 'store'])->name('articles.store');
 Route::get('/articles/create', [ArticleController::class, 'create'])->name('articles.create');
