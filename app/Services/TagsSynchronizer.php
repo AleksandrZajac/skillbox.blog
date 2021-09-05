@@ -11,13 +11,9 @@ class TagsSynchronizer
 
     public function sync(Collection $tags, Model $model)
     {
-        $articleTags = $model->tags->keyBy('name');
+        $syncIds = [];
 
-        $tagsToAttach = $tags->diffKeys($articleTags);
-
-        $syncIds = $articleTags->intersectByKeys($tags)->pluck('id')->toArray();
-
-        foreach ($tagsToAttach as $tag) {
+        foreach ($tags as $tag) {
             $tag = Tag::firstOrCreate(['name' => $tag]);
             $syncIds[] = $tag->id;
         }

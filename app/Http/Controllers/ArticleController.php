@@ -56,7 +56,7 @@ class ArticleController extends Controller
 
         $article->save();
 
-        $tags = collect(explode(',', request('tags')))->keyBy(function ($item) { return $item; });
+        $tags = collect(explode(',', request('tags')));
 
         $this->tagsSynchronizer->sync($tags, $article);
 
@@ -97,7 +97,7 @@ class ArticleController extends Controller
     {
         $article->update($request->all());
 
-        $tags = collect(explode(',', request('tags')))->keyBy(function ($item) { return $item; });
+        $tags = collect(explode(',', request('tags')));
 
         $this->tagsSynchronizer->sync($tags, $article);
 
