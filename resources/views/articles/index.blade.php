@@ -19,10 +19,12 @@
                 <p class="blog-post-meta">{{ $article->created_at->toFormattedDateString() }}</p>
 
                 <p>{{ $article->short_description }}</p>
+                @include('articles.tags', ['tags' => $article->tags])
                 @endforeach
                 <hr>
             </div>
         </div>
+        @include('layouts.sidebar')
 </main>
 
 @endsection
