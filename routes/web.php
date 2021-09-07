@@ -33,8 +33,6 @@ Route::delete('/articles/{article}', [ArticleController::class, 'destroy'])->nam
 
 Route::get('/contacts', [ContactsController::class, 'create']);
 Route::post('/contacts', [ContactsController::class, 'store']);
-Route::get('/admin/feedback', [ContactsController::class, 'index'])->middleware('auth');
+Route::get('/admin/feedback', [ContactsController::class, 'index']);
 
 Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

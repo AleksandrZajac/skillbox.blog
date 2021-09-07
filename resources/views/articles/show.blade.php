@@ -21,12 +21,12 @@
                                 Редактировать статью
                             <a>
                         </h5>
-                        @endcan
                         <form action="{{ route('articles.destroy', $article->slug)}}" method="POST">
                             @csrf
                             @method('DELETE')
                             <button class="btn btn-danger" type="submit">Стереть задачу</button>
                         </form>
+                        @endcan
                         <hr>
                     </div>
                 </div>
