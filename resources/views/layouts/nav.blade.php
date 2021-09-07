@@ -12,7 +12,7 @@
                         <line x1="21" y1="21" x2="15.8" y2="15.8"></line>
                     </svg>
                 </a>
-                <a class="btn btn-sm btn-outline-secondary" href="#">Sign up</a>
+            @include('layouts.app')
             </div>
         </div>
     </header>

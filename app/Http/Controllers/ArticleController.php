@@ -14,6 +14,13 @@ class ArticleController extends Controller
     public function __construct(TagsSynchronizer $tagsSynchronizer)
     {
         $this->tagsSynchronizer = $tagsSynchronizer;
+        // $this->middleware('auth');
+        // $this->middleware('auth', ['only' => ['index', 'create']]);
+        // $this->middleware('auth')->only(['index', 'create']);
+        //использование политики в middleware
+        // $this->middleware('can:update,article');
+        //с исключением
+        $this->middleware('can:update,article')->except(['index', 'store', 'create']);
     }
     /**
      * Display a listing of the resource.
@@ -22,7 +29,16 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::with('tags')->latest()->get();
+        // Auth::id;
+        // auth()->id();
+        // auth()->user();
+        // auth()->check();
+        // auth()->quest();
+        // dd(auth()->id());
+        // $articles = Article::with('tags')->latest()->get();
+        // $articles = Article::where('owner_id', auth()->id())->with('tags')->latest()->get();
+        $articles = auth()->user()->articles()->with('tags')->latest()->get();
+        dd($articles);
 
         return view('articles.index', compact('articles'));
     }
@@ -53,6 +69,7 @@ class ArticleController extends Controller
         $article->short_description = request('short_description');
         $article->description = request('description');
         $article->is_published = (bool)request('is_published');
+        $article->owner_id = auth()->id();
 
         $article->save();
 
@@ -83,6 +100,22 @@ class ArticleController extends Controller
      */
     public function edit(Article $article)
     {
+        //запрет на редактирование разные варианты
+        // dd($article->owner_id, auth()->id());
+        // if ($article->owner_id !== auth()->id()) {
+        //     abort(403);
+        // }
+        // abort_if($article->owner_id !== auth()->id(), 403);
+        //вариант с использованием политики
+        // $this->authorize('update', $article);
+        //с использованием фасада Gate
+        // abort_if(\Gate::denies('update', $article), 403);
+        // abort_unless(\Gate::allows('update', $article), 403);
+
+        // abort_if(auth()->user()->cannot('update', $article), 403);
+        // abort_unless(auth()->user()->can('update', $article), 403);
+
+
         return view('articles.edit',compact('article'));
     }
 

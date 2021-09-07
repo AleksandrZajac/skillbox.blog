@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('without_sidebar')
 
 @section('content')
 
