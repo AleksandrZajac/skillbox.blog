@@ -14,8 +14,9 @@ class ArticleController extends Controller
     public function __construct(TagsSynchronizer $tagsSynchronizer)
     {
         $this->tagsSynchronizer = $tagsSynchronizer;
-        $this->middleware('auth')->only(['create']);
+        $this->middleware('auth')->except(['index']);
         $this->middleware('can:update,article')->except(['index', 'store', 'show', 'create']);
+        $this->middleware('can:delete,article')->only(['destroy']);
     }
     /**
      * Display a listing of the resource.

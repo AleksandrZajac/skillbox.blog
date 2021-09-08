@@ -21,4 +21,16 @@ class ArticlePolicy
     {
         return $article->owner_id == $user->id;
     }
+
+        /**
+     * Determine whether the user can delete the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Article  $article
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function delete(User $user, Article $article)
+    {
+        return $article->owner_id == $user->id;
+    }
 }

@@ -21,6 +21,8 @@
                                 Редактировать статью
                             <a>
                         </h5>
+                        @endcan
+                        @can('delete', $article)
                         <form action="{{ route('articles.destroy', $article->slug)}}" method="POST">
                             @csrf
                             @method('DELETE')
