@@ -22,7 +22,7 @@ class ArticlePolicy
         return $article->owner_id == $user->id;
     }
 
-        /**
+     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
