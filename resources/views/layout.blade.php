@@ -17,9 +17,15 @@
     <div class="container">
 
         @include('layouts.nav')
+        <main role="main" class="container">
+            @yield('content')
 
-        @yield('content')
+            @section('sidebar')
 
+            @include('layouts.sidebar')
+
+            @show()
+        </main>
         @include('layouts.footer')
 
     </div>

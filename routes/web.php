@@ -34,3 +34,5 @@ Route::delete('/articles/{article}', [ArticleController::class, 'destroy'])->nam
 Route::get('/contacts', [ContactsController::class, 'create']);
 Route::post('/contacts', [ContactsController::class, 'store']);
 Route::get('/admin/feedback', [ContactsController::class, 'index']);
+
+Auth::routes();

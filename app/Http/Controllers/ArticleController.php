@@ -14,6 +14,9 @@ class ArticleController extends Controller
     public function __construct(TagsSynchronizer $tagsSynchronizer)
     {
         $this->tagsSynchronizer = $tagsSynchronizer;
+        $this->middleware('auth')->except(['index']);
+        $this->middleware('can:update,article')->except(['index', 'store', 'show', 'create']);
+        $this->middleware('can:delete,article')->only(['destroy']);
     }
     /**
      * Display a listing of the resource.
@@ -22,7 +25,7 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::with('tags')->latest()->get();
+        $articles = Article::latest()->get();
 
         return view('articles.index', compact('articles'));
     }
@@ -53,6 +56,7 @@ class ArticleController extends Controller
         $article->short_description = request('short_description');
         $article->description = request('description');
         $article->is_published = (bool)request('is_published');
+        $article->owner_id = auth()->id();
 
         $article->save();
 
