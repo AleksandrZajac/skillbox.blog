@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Notifications\ArticleNotificationCreated;
+use App\Notifications\ArticleNotificationDeleted;
+use App\Notifications\ArticleNotificationUpdated;
 use App\Models\Article;
 use App\Models\Tag;
 use App\Http\Requests\ArticleRequest;
@@ -49,7 +53,7 @@ class ArticleController extends Controller
      * @param  \Illuminate\Http\ArticleReques  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ArticleRequest $request)
+    public function store(ArticleRequest $request, User $user)
     {
         $article = new Article();
         $article->slug = request('slug');
@@ -65,6 +69,7 @@ class ArticleController extends Controller
 
         $this->tagsSynchronizer->sync($tags, $article);
 
+        $user->admin()->notify(new ArticleNotificationCreated($article->title, $article->slug));
 
         return redirect()->route('articles.index')->with('success', 'Post created successfully.');
     }
@@ -98,7 +103,7 @@ class ArticleController extends Controller
      * @param  \App\Models\Article  $article
      * @return \Illuminate\Http\Response
      */
-    public function update(ArticleRequest $request, Article $article)
+    public function update(ArticleRequest $request, Article $article, User $user)
     {
         $article->update($request->all());
 
@@ -106,7 +111,7 @@ class ArticleController extends Controller
 
         $this->tagsSynchronizer->sync($tags, $article);
 
-        event(new ArticleCreated($article));
+        $user->admin()->notify(new ArticleNotificationUpdated($article->title, $article->slug));
 
         return redirect()->route('articles.index')->with('success','Post updated successfully');
     }
@@ -117,9 +122,11 @@ class ArticleController extends Controller
       * @param  \App\Models\Article  $article
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Article $article)
+    public function destroy(Article $article, User $user)
     {
         $article->delete();
+
+        $user->admin()->notify(new ArticleNotificationDeleted($article->title, $article->slug));
 
         return redirect()->route('articles.index')
                         ->with('success','post deleted successfully');

@@ -45,4 +45,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(Article::class, 'owner_id');
     }
+
+    public function admin()
+    {
+        $userAdmin = User::where('email', config('mail.to.admin'))->get();
+
+        return $userAdmin[0];
+    }
 }
