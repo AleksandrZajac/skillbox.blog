@@ -6,6 +6,7 @@ use App\Models\Article;
 use App\Models\Tag;
 use App\Http\Requests\ArticleRequest;
 use App\Services\TagsSynchronizer;
+use App\Events\ArticleCreated;
 
 class ArticleController extends Controller
 {
@@ -104,6 +105,8 @@ class ArticleController extends Controller
         $tags = collect(explode(',', request('tags')));
 
         $this->tagsSynchronizer->sync($tags, $article);
+
+        event(new ArticleCreated($article));
 
         return redirect()->route('articles.index')->with('success','Post updated successfully');
     }
