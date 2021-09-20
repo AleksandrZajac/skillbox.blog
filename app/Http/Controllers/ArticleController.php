@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Notifications\ArticleNotificationCreated;
+use App\Notifications\ArticleNotificationDeleted;
+use App\Notifications\ArticleNotificationUpdated;
 use App\Models\Article;
-use App\Models\Tag;
 use App\Http\Requests\ArticleRequest;
 use App\Services\TagsSynchronizer;
+use Illuminate\Support\Facades\Notification;
 
 class ArticleController extends Controller
 {
@@ -64,6 +67,7 @@ class ArticleController extends Controller
 
         $this->tagsSynchronizer->sync($tags, $article);
 
+        Notification::route('mail', config('mail.to.admin'))->notify(new ArticleNotificationCreated($article));
 
         return redirect()->route('articles.index')->with('success', 'Post created successfully.');
     }
@@ -87,7 +91,7 @@ class ArticleController extends Controller
      */
     public function edit(Article $article)
     {
-        return view('articles.edit',compact('article'));
+        return view('articles.edit', compact('article'));
     }
 
     /**
@@ -105,20 +109,24 @@ class ArticleController extends Controller
 
         $this->tagsSynchronizer->sync($tags, $article);
 
-        return redirect()->route('articles.index')->with('success','Post updated successfully');
+        Notification::route('mail', config('mail.to.admin'))->notify(new ArticleNotificationUpdated($article));
+
+        return redirect()->route('articles.index')->with('success', 'Post updated successfully');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-      * @param  \App\Models\Article  $article
+     * @param  \App\Models\Article  $article
      * @return \Illuminate\Http\Response
      */
     public function destroy(Article $article)
     {
         $article->delete();
 
+        Notification::route('mail', config('mail.to.admin'))->notify(new ArticleNotificationDeleted($article));
+
         return redirect()->route('articles.index')
-                        ->with('success','post deleted successfully');
+            ->with('success', 'post deleted successfully');
     }
 }
