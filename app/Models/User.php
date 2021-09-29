@@ -20,6 +20,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role_id',
     ];
 
     /**
@@ -44,5 +45,15 @@ class User extends Authenticatable
     public function articles()
     {
         return $this->hasMany(Article::class, 'owner_id');
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'role_id');
+    }
+
+    public function isAdmin()
+    {
+        return $this->name == config('admin.api.key.name');
     }
 }
