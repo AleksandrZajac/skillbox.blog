@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Blade;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,6 +30,12 @@ class AppServiceProvider extends ServiceProvider
 
             $view->with('tagsCloud', \App\Models\Tag::tagsCloud());
 
+        });
+
+        Blade::if('admin', function () {
+            if(auth()->user()) {
+                return auth()->user()->isAdmin();
+            }
         });
     }
 }

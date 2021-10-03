@@ -16,11 +16,19 @@
                         <p>{{ $article->description }}</p>
                         @include('articles.tags', ['tags' => $article->tags])
                         @can('update', $article)
+                        @admin
+                        <h5 class="pt-2">
+                            <a class="btn btn-primary" href="{{ route('admin.articles.edit', $article->slug) }}">
+                                Редактировать статью
+                            <a>
+                        </h5>
+                        @else
                         <h5 class="pt-2">
                             <a class="btn btn-primary" href="{{ route('articles.edit', $article->slug) }}">
                                 Редактировать статью
                             <a>
                         </h5>
+                        @endadmin
                         @endcan
                         @can('delete', $article)
                         <form action="{{ route('articles.destroy', $article->slug)}}" method="POST">

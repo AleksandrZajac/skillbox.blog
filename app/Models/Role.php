@@ -10,4 +10,14 @@ class Role extends Model
     use HasFactory;
 
     protected $fillable = ['name'];
+
+    public function scopeRoleUser($query)
+    {
+        return $query->where('name', 'user');
+    }
+
+    public function scopeRoleAdmin($query)
+    {
+        return $query->where('name', 'admin');
+    }
 }

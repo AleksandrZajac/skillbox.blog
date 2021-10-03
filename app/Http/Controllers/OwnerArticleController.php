@@ -2,16 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Article;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Article;
 
-class AdminController extends Controller
+class OwnerArticleController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('can:admin');
+        $this->middleware('auth');
     }
 
     /**
@@ -21,7 +19,7 @@ class AdminController extends Controller
      */
     public function index()
     {
-        $articles = Article::latest()->get();
+        $articles = Article::latest()->where('owner_id', auth()->user()->id)->get();
 
         return view('articles.index', compact('articles'));
     }

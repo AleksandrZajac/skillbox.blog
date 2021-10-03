@@ -18,6 +18,17 @@ class CreateRolesTable extends Migration
             $table->string('name', 100);
             $table->timestamps();
         });
+
+        $data = [
+            [
+              'name' => config('admin.api.key.name'),
+            ],
+            [
+              'name' => 'user',
+            ],
+        ];
+
+        \DB::table('roles')->insert($data);
     }
 
     /**

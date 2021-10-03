@@ -26,4 +26,9 @@ class Article extends Model
     {
         return $this->belongsToMany(Tag::class, 'tag_article');
     }
+
+    public function scopeIsPublished($query)
+    {
+        return $query->latest()->where('is_published', true);
+    }
 }

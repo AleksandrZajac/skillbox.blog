@@ -6,6 +6,7 @@ use App\Notifications\ArticleNotificationCreated;
 use App\Notifications\ArticleNotificationDeleted;
 use App\Notifications\ArticleNotificationUpdated;
 use App\Models\Article;
+use App\Models\Role;
 use App\Http\Requests\ArticleRequest;
 use App\Services\TagsSynchronizer;
 use Illuminate\Support\Facades\Notification;
@@ -28,7 +29,7 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::latest()->where('is_published', true)->get();
+        $articles = Article::latest()->isPublished()->get();
 
         return view('articles.index', compact('articles'));
     }
