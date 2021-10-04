@@ -8,6 +8,7 @@
             <h2 class="blog-post-title">Страница создания статьи</h2>
 
             @include('layouts.errors')
+            @include('layouts.success')
 
             @if(isset($article->slug))
             <form method="POST" action="{{ route('articles.update', $article->slug) }}">
@@ -50,7 +51,7 @@
                             $article->is_published) )
                         checked="checked"
                         @endif>
-                        <label for="completed">Check me out</label>
+                        <label for="completed">Опубликовать</label>
                     </div>
                     <button type="submit" class="btn btn-primary">Отправить</button>
                 </form>

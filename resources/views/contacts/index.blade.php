@@ -8,7 +8,6 @@
             <h3 class="pb-3 mb-4 font-italic border-bottom">
                 Список обращений
             </h3>
-
             <div class="blog-post">
                 @foreach($contacts as $contact)
                 <h2 class="blog-post-title">{{ $contact->email }}</a></h2>

@@ -4,7 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ContactsController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\TagController;
-use App\Models\Article;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\OwnerArticleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,5 +35,9 @@ Route::delete('/articles/{article}', [ArticleController::class, 'destroy'])->nam
 Route::get('/contacts', [ContactsController::class, 'create']);
 Route::post('/contacts', [ContactsController::class, 'store']);
 Route::get('/admin/feedback', [ContactsController::class, 'index']);
+Route::get('/admin', [AdminController::class, 'index'])->name('admin.articles.index');
+Route::get('/admin/articles/{article}/edit', [ArticleController::class, 'edit'])->name('admin.articles.edit');
+
+Route::get('/owner/articles', [OwnerArticleController::class, 'index'])->name('owner.articles.index');
 
 Auth::routes();

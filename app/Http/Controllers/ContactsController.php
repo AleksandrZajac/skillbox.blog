@@ -7,6 +7,11 @@ use App\Models\Contact;
 
 class ContactsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:admin')->only('index');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +19,8 @@ class ContactsController extends Controller
      */
     public function index()
     {
-        $contacts = Contact::latest()->get();;
+        $contacts = Contact::latest()->get();
+
         return view('contacts.index', compact('contacts'));
     }
 
@@ -34,7 +40,7 @@ class ContactsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
         $this->validate(request(), [
             'email'  => 'required|email',
@@ -43,51 +49,6 @@ class ContactsController extends Controller
 
         Contact::create(request()->all());
 
-        return redirect('/admin/feedback');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return redirect('contacts')->with('success', 'Сообщение успешно отправлено');
     }
 }
