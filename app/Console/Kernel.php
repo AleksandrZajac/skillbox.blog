@@ -24,12 +24,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('send:messages', [
+        $schedule->command('send:digest', [
             '--subject' => 'Новые опубликованые статьи за неделю',
             '--period' => '7',
-        ])
-            ->everyMinute();
-            // ->weeklyOn(1, '8:00');
+        ])->weeklyOn(1, '8:00');
     }
 
     /**

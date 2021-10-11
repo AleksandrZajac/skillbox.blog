@@ -23,7 +23,7 @@ class ArticleFactory extends Factory
     public function definition()
     {
         return [
-            'slug' => $this->faker->sentence(rand(1, 3), true),
+            'slug' => $this->faker->words(rand(1, 4), true),
             'title' => $this->faker->sentence(rand(1, 3), true),
             'description' => $this->faker->realText(rand(100, 400)),
             'short_description' => $this->faker->text(rand(20, 30)),
