@@ -7,6 +7,7 @@ use Illuminate\Support\Carbon;
 use App\Models\Article;
 use App\Models\User;
 use App\Notifications\SendDigest as NotificationSendDigest;
+use Illuminate\Support\Facades\Notification;
 
 class SendDigest extends Command
 {
@@ -52,7 +53,8 @@ class SendDigest extends Command
 
         $subject = $this->option('subject');
         $users = User::all();
-        $users->map->notify(new NotificationSendDigest($articles, $subject));
+
+        Notification::send($users, new NotificationSendDigest($articles, $subject));
 
         $this->info('Уведомления отравлены');
     }
