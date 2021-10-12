@@ -53,7 +53,6 @@ class SendDigest extends Command
 
         $subject = $this->option('subject');
         $users = User::all();
-
         Notification::send($users, new NotificationSendDigest($articles, $subject));
 
         $this->info('Уведомления отравлены');
