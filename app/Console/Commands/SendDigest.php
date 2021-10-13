@@ -7,10 +7,11 @@ use Illuminate\Support\Carbon;
 use App\Models\Article;
 use App\Models\User;
 use App\Notifications\SendDigest as NotificationSendDigest;
-use Illuminate\Support\Facades\Notification;
 
 class SendDigest extends Command
 {
+    // use Notifiable;
+
     /**
      * The name and signature of the console command.
      *
@@ -52,8 +53,10 @@ class SendDigest extends Command
         ])->get();
 
         $subject = $this->option('subject');
-        $users = User::all();
-        Notification::send($users, new NotificationSendDigest($articles, $subject));
+
+        foreach (User::lazy() as $user) {
+            $user->notify(new NotificationSendDigest($articles, $subject));
+        }
 
         $this->info('Уведомления отравлены');
     }
