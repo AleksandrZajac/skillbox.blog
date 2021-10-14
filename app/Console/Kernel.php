@@ -24,7 +24,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->command('send:digest', [
+            '--subject' => 'Новые опубликованые статьи за неделю',
+            '--period' => '7',
+        ])->weeklyOn(1, '8:00');
     }
 
     /**

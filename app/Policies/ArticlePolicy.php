@@ -19,7 +19,11 @@ class ArticlePolicy
      */
     public function update(User $user, Article $article)
     {
-        return $article->owner_id == $user->id;
+        if ($article->owner_id == $user->id || auth()->user()->isAdmin()) {
+            return true;
+        }
+
+        return false;
     }
 
      /**
@@ -31,6 +35,10 @@ class ArticlePolicy
      */
     public function delete(User $user, Article $article)
     {
-        return $article->owner_id == $user->id;
+        if ($article->owner_id == $user->id || auth()->user()->isAdmin()) {
+            return true;
+        }
+
+        return false;
     }
 }
