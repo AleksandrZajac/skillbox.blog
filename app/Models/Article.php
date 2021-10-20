@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\ArticleCreated;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,6 +16,10 @@ class Article extends Model
         'short_description',
         'description',
         'is_published'
+    ];
+
+    protected $dispatchesEvents = [
+        'created' => ArticleCreated::class,
     ];
 
     public function getRouteKeyName()

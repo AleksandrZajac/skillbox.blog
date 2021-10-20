@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Notifications\ArticleNotificationCreated;
 use App\Notifications\ArticleNotificationDeleted;
 use App\Notifications\ArticleNotificationUpdated;
 use App\Models\Article;
-use App\Models\Role;
 use App\Http\Requests\ArticleRequest;
 use App\Services\TagsSynchronizer;
 use Illuminate\Support\Facades\Notification;
@@ -68,7 +66,6 @@ class ArticleController extends Controller
 
         $this->tagsSynchronizer->sync($tags, $article);
 
-        Notification::route('mail', config('mail.to.admin'))->notify(new ArticleNotificationCreated($article));
 
         return redirect()->route('articles.index')->with('success', 'Post created successfully.');
     }
