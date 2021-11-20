@@ -2,26 +2,29 @@
 
 namespace App\Notifications;
 
-use App\Models\Article;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use App\Channels\PushAllChannel;
+use App\Services\PushAll;
 
 class ArticleNotificationCreated extends Notification
 {
     use Queueable;
 
     private $article;
+    private $pushAll;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($article)
+    public function __construct($article, PushAll $pushAll)
     {
         $this->article = $article;
+        $this->pushAll = $pushAll;
     }
 
     /**
@@ -32,7 +35,7 @@ class ArticleNotificationCreated extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail', PushAllChannel::class];
     }
 
     /**
@@ -47,6 +50,12 @@ class ArticleNotificationCreated extends Notification
             ->line('Статья ' . $this->article->title . ' создана.')
             ->action('Перейти на статью', url('/articles/' . $this->article->slug))
             ->line('Спасибо что используете наше приложение!');
+    }
+
+    public function toPushAll($notifiable)
+    {
+        return  $this->pushAll
+            ->send($this->article->title . PHP_EOL . route('articles.show', $this->article->slug), 'Создана новая статья');
     }
 
     /**

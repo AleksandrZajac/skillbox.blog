@@ -6,21 +6,23 @@ use App\Notifications\ArticleNotificationCreated;
 use App\Notifications\ArticleNotificationDeleted;
 use App\Notifications\ArticleNotificationUpdated;
 use App\Models\Article;
-use App\Models\Role;
 use App\Http\Requests\ArticleRequest;
 use App\Services\TagsSynchronizer;
 use Illuminate\Support\Facades\Notification;
+use App\Services\PushAll;
 
 class ArticleController extends Controller
 {
     private $tagsSynchronizer;
+    private $PushAll;
 
-    public function __construct(TagsSynchronizer $tagsSynchronizer)
+    public function __construct(TagsSynchronizer $tagsSynchronizer, PushAll $pushAll)
     {
         $this->tagsSynchronizer = $tagsSynchronizer;
         $this->middleware('auth')->except(['index']);
         $this->middleware('can:update,article')->except(['index', 'store', 'show', 'create']);
         $this->middleware('can:delete,article')->only(['destroy']);
+        $this->pushAll = $pushAll;
     }
     /**
      * Display a listing of the resource.
@@ -68,7 +70,8 @@ class ArticleController extends Controller
 
         $this->tagsSynchronizer->sync($tags, $article);
 
-        Notification::route('mail', config('mail.to.admin'))->notify(new ArticleNotificationCreated($article));
+        Notification::route('mail', config('mail.to.admin'))
+            ->notify(new ArticleNotificationCreated($article, $this->pushAll));
 
         return redirect()->route('articles.index')->with('success', 'Post created successfully.');
     }
