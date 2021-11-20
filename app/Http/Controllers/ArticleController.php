@@ -6,6 +6,7 @@ use App\Notifications\ArticleNotificationCreated;
 use App\Notifications\ArticleNotificationDeleted;
 use App\Notifications\ArticleNotificationUpdated;
 use App\Models\Article;
+use App\Models\Comment;
 use App\Http\Requests\ArticleRequest;
 use App\Services\TagsSynchronizer;
 use Illuminate\Support\Facades\Notification;
@@ -84,7 +85,9 @@ class ArticleController extends Controller
      */
     public function show(Article $article)
     {
-        return view('articles.show', compact('article'));
+        $comments = Comment::where('article_id', $article->id)->get();
+
+        return view('articles.show', compact('article', 'comments'));
     }
 
     /**

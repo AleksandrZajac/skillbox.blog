@@ -15,6 +15,27 @@
                         {{ $article->created_at->toFormattedDateString() }}
                         <p>{{ $article->description }}</p>
                         @include('articles.tags', ['tags' => $article->tags])
+                        <h3>Коментарии</h3>
+                        @if ($message = Session::get('success'))
+                        <div class="alert alert-success">
+                            <p>{{ $message }}</p>
+                        </div>
+                        @endif
+                        <div class="blog-post">
+                            @foreach($comments as $comment)
+                            </h2>
+                            <p>{{ $comment->description }}</p>
+                            <p class="blog-post-meta">{{ $comment->created_at }}</p>
+                            <hr>
+                            @endforeach
+                        </div>
+                        @auth
+                        <h5 class="pt-2">
+                            <a class="btn btn-success" href="{{ route('comments.create', $article->slug) }}">
+                                Оставить коментарий
+                            <a>
+                        </h5>
+                        @endauth
                         @can('update', $article)
                         @admin
                         <h5 class="pt-2">

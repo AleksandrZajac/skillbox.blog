@@ -22,6 +22,11 @@ class Article extends Model
         return 'slug';
     }
 
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'article_id');
+    }
+
     public function tags()
     {
         return $this->belongsToMany(Tag::class, 'tag_article');
