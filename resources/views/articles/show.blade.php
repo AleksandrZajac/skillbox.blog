@@ -22,12 +22,7 @@
                         </div>
                         @endif
                         <div class="blog-post">
-                            @foreach($comments as $comment)
-                            </h2>
-                            <p>{{ $comment->description }}</p>
-                            <p class="blog-post-meta">{{ $comment->created_at }}</p>
-                            <hr>
-                            @endforeach
+                        @include('comments.show')
                         </div>
                         @auth
                         <h5 class="pt-2">
@@ -41,6 +36,11 @@
                         <h5 class="pt-2">
                             <a class="btn btn-primary" href="{{ route('admin.articles.edit', $article->slug) }}">
                                 Редактировать статью
+                            <a>
+                        </h5>
+                        <h5 class="pt-2">
+                            <a class="btn btn-primary" href="{{ route('admin.articles.edit', $article->slug) }}">
+                                История изменений
                             <a>
                         </h5>
                         @else
