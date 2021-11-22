@@ -13,6 +13,9 @@ use App\Services\TagsSynchronizer;
 use Illuminate\Support\Facades\Notification;
 use App\Services\PushAll;
 
+
+use Illuminate\Support\Facades\DB;
+
 class ArticleController extends Controller
 {
     private $tagsSynchronizer;
@@ -86,6 +89,7 @@ class ArticleController extends Controller
      */
     public function show(Article $article)
     {
+        // print_r(json_encode($article));
         return view('articles.show', compact('article'));
     }
 

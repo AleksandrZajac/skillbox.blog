@@ -1,4 +1,5 @@
-<header class="blog-header py-3">
+<div class="container">
+    <header class="blog-header py-3">
         <div class="row flex-nowrap justify-content-between align-items-center">
             <div class="col-8 pt-1 text-center">
                 <h1>Skillbox Laravel</h1>
@@ -32,3 +33,4 @@
             @endadmin
         </nav>
     </div>
+</div>
