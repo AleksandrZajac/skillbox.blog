@@ -19,11 +19,9 @@ class CommentsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Article $article)
     {
-        $articleSlug = substr(\Request::getRequestUri(), 1, -16);
-
-        return view('comments.create', compact('articleSlug'));
+        return view('comments.create', compact('article'));
     }
 
     /**
@@ -32,18 +30,15 @@ class CommentsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CommentRequest $request)
+    public function store(Article $article)
     {
-        $articleSlug = request('article_slug');
-        $articleId = Article::where('slug', $articleSlug)->get()->first()->id;
-
         $comment = new Comment();
         $comment->description = request('description');
-        $comment->article_id = $articleId;
+        $comment->article_id = $article->id;
         $comment->owner_id = auth()->id();
 
         $comment->save();
 
-        return redirect()->route('articles.show', $articleSlug)->with('success', 'Comment created successfully.');
+        return redirect()->route('articles.show', $article->slug)->with('success', 'Comment created successfully.');
     }
 }

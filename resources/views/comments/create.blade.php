@@ -8,9 +8,8 @@
 
             @include('layouts.errors')
             @include('layouts.success')
-                <form method="POST" action="{{ route('comments.store') }}">
+                <form method="POST" action="{{ route('comments.store', $article->slug) }}">
                     @csrf
-                    <input type="hidden" class="form-control" name="article_slug" value="{{ $articleSlug }}">
                     <div class="form-group">
                         <label for="description">Ваш комментарий</label>
                         <textarea class="form-control" name="description"
@@ -23,4 +22,4 @@
     </div>
 
 
-    @endsection
+@endsection

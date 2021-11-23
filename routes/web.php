@@ -42,7 +42,7 @@ Route::get('/admin/articles/{article}/history', [AdminController::class, 'histor
 
 Route::get('/owner/articles', [OwnerArticleController::class, 'index'])->name('owner.articles.index');
 
-Route::post('/comments', [CommentsController::class, 'store'])->name('comments.store');
+Route::post('/articles/{article}/comments', [CommentsController::class, 'store'])->name('comments.store');
 Route::get('/{article}/comments/create', [CommentsController::class, 'create'])->name('comments.create');
 
 Auth::routes();
