@@ -22,6 +22,11 @@ class Article extends Model
         return 'slug';
     }
 
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'article_id');
+    }
+
     public function tags()
     {
         return $this->belongsToMany(Tag::class, 'tag_article');
@@ -30,5 +35,11 @@ class Article extends Model
     public function scopeIsPublished($query)
     {
         return $query->latest()->where('is_published', true);
+    }
+
+    public function history()
+    {
+        return $this->belongsToMany(User::class, 'article_histories')
+            ->withPivot(['before', 'after'])->withTimestamps();
     }
 }

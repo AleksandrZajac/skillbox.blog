@@ -6,10 +6,15 @@ use App\Notifications\ArticleNotificationCreated;
 use App\Notifications\ArticleNotificationDeleted;
 use App\Notifications\ArticleNotificationUpdated;
 use App\Models\Article;
+use App\Models\Comment;
+use App\Models\User;
 use App\Http\Requests\ArticleRequest;
 use App\Services\TagsSynchronizer;
 use Illuminate\Support\Facades\Notification;
 use App\Services\PushAll;
+
+
+use Illuminate\Support\Facades\DB;
 
 class ArticleController extends Controller
 {

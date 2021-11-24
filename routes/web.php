@@ -6,6 +6,7 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\OwnerArticleController;
+use App\Http\Controllers\CommentsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,7 +38,11 @@ Route::post('/contacts', [ContactsController::class, 'store']);
 Route::get('/admin/feedback', [ContactsController::class, 'index']);
 Route::get('/admin', [AdminController::class, 'index'])->name('admin.articles.index');
 Route::get('/admin/articles/{article}/edit', [ArticleController::class, 'edit'])->name('admin.articles.edit');
+Route::get('/admin/articles/{article}/history', [AdminController::class, 'history'])->name('admin.articles.history');
 
 Route::get('/owner/articles', [OwnerArticleController::class, 'index'])->name('owner.articles.index');
+
+Route::post('/articles/{article}/comments', [CommentsController::class, 'store'])->name('comments.store');
+Route::get('/{article}/comments/create', [CommentsController::class, 'create'])->name('comments.create');
 
 Auth::routes();
