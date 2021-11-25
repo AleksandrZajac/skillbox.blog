@@ -26,7 +26,7 @@ class ArticlePolicy
         return false;
     }
 
-     /**
+    /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user

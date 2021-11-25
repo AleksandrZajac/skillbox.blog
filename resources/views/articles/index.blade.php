@@ -21,6 +21,9 @@
         @include('articles.tags', ['tags' => $article->tags])
         @endforeach
     </div>
+    <div class="pt-5">
+        {{ $articles->links() }}
+    </div>
 </div>
 
 @endsection
