@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Pagination\Paginator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,13 +30,14 @@ class AppServiceProvider extends ServiceProvider
         view()->composer('layouts.sidebar', function ($view) {
 
             $view->with('tagsCloud', \App\Models\Tag::tagsCloud());
-
         });
 
         Blade::if('admin', function () {
-            if(auth()->user()) {
+            if (auth()->user()) {
                 return auth()->user()->isAdmin();
             }
         });
+
+        Paginator::useBootstrap();
     }
 }

@@ -7,6 +7,7 @@ use App\Http\Controllers\TagController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\OwnerArticleController;
 use App\Http\Controllers\CommentsController;
+use App\Http\Controllers\NewsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,7 +37,7 @@ Route::delete('/articles/{article}', [ArticleController::class, 'destroy'])->nam
 Route::get('/contacts', [ContactsController::class, 'create']);
 Route::post('/contacts', [ContactsController::class, 'store']);
 Route::get('/admin/feedback', [ContactsController::class, 'index']);
-Route::get('/admin', [AdminController::class, 'index'])->name('admin.articles.index');
+Route::get('/admin/articles', [AdminController::class, 'index'])->name('admin.articles.index');
 Route::get('/admin/articles/{article}/edit', [ArticleController::class, 'edit'])->name('admin.articles.edit');
 Route::get('/admin/articles/{article}/history', [AdminController::class, 'history'])->name('admin.articles.history');
 
@@ -44,5 +45,15 @@ Route::get('/owner/articles', [OwnerArticleController::class, 'index'])->name('o
 
 Route::post('/articles/{article}/comments', [CommentsController::class, 'store'])->name('comments.store');
 Route::get('/{article}/comments/create', [CommentsController::class, 'create'])->name('comments.create');
+
+Route::get('/news', [NewsController::class, 'index'])->name('news.index');
+Route::get('/news/{news}', [NewsController::class, 'show'])->name('news.show');
+Route::get('/admin/news', [AdminController::class, 'news'])->name('admin.news');
+Route::post('/admin/news', [NewsController::class, 'store'])->name('admin.news.store');
+Route::get('/admin/news/create', [NewsController::class, 'create'])->name('admin.news.create');
+Route::get('/admin/news/{news}', [AdminController::class, 'show'])->name('admin.news.show');
+Route::get('/admin/news/{news}/edit', [NewsController::class, 'edit'])->name('admin.news.edit');
+Route::patch('/admin/news/{news}', [NewsController::class, 'update'])->name('admin.news.update');
+Route::delete('/admin/news/{news}', [NewsController::class, 'destroy'])->name('admin.news.destroy');
 
 Auth::routes();

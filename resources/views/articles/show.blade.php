@@ -4,7 +4,7 @@
 
 <div class="col-md-8 blog-main">
     <h3 class="pb-3 mb-4 font-italic border-bottom">
-        Статьи
+        Статья
     </h3>
     <div class="blog-post">
         <h2 class="blog-post-title">{{ $article->title }}</h2>
@@ -18,13 +18,13 @@
         </div>
         @endif
         <div class="blog-post">
-        @include('comments.show')
+            @include('comments.show')
         </div>
         @auth
         <h5 class="pt-2">
             <a class="btn btn-success" href="{{ route('comments.create', $article->slug) }}">
                 Оставить коментарий
-            <a>
+                <a>
         </h5>
         @endauth
         @can('update', $article)
@@ -32,18 +32,18 @@
         <h5 class="pt-2">
             <a class="btn btn-primary" href="{{ route('admin.articles.edit', $article->slug) }}">
                 Редактировать статью
-            <a>
+                <a>
         </h5>
         <h5 class="pt-2">
             <a class="btn btn-secondary" href="{{ route('admin.articles.history', $article->slug) }}">
                 История изменений
-            <a>
+                <a>
         </h5>
         @else
         <h5 class="pt-2">
             <a class="btn btn-primary" href="{{ route('articles.edit', $article->slug) }}">
                 Редактировать статью
-            <a>
+                <a>
         </h5>
         @endadmin
         @endcan
@@ -51,7 +51,7 @@
         <form action="{{ route('articles.destroy', $article->slug)}}" method="POST">
             @csrf
             @method('DELETE')
-            <button class="btn btn-danger" type="submit">Стереть задачу</button>
+            <button class="btn btn-danger" type="submit">Стереть статью</button>
         </form>
         @endcan
     </div>
