@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Pagination\Paginator;
+use App\Models\Tag;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,7 +30,10 @@ class AppServiceProvider extends ServiceProvider
     {
         view()->composer('layouts.sidebar', function ($view) {
 
-            $view->with('tagsCloud', \App\Models\Tag::tagsCloud());
+            $view->with([
+                'articleTagsCloud' => Tag::articleTagsCloud(),
+                'newsTagsCloud' => Tag::newsTagsCloud(),
+            ]);
         });
 
         Blade::if('admin', function () {

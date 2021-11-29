@@ -21,7 +21,7 @@
         <h2 class="blog-post-title"><a href="{{ route('news.show', $newsItem->id) }}">{{ $newsItem->title }}</a></h2>
         <p class="blog-post-meta">{{ $newsItem->created_at->toFormattedDateString() }}</p>
         @endadmin
-
+        @include('news.tags', ['tags' => $newsItem->tags])
         @endforeach
     </div>
     <div class="pt-5">

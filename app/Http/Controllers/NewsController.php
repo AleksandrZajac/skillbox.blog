@@ -5,11 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\News;
 use App\Http\Requests\NewsRequest;
+use App\Services\TagsSynchronizer;
 
 class NewsController extends Controller
 {
-    public function __construct()
+    private $tagsSynchronizer;
+
+    public function __construct(TagsSynchronizer $tagsSynchronizer)
     {
+        $this->tagsSynchronizer = $tagsSynchronizer;
         $this->middleware('can:show,news')->only(['show']);
         $this->middleware('can:admin')->only(['store', 'create', 'edit', 'update', 'destroy']);
     }
@@ -52,7 +56,11 @@ class NewsController extends Controller
 
         $news->save();
 
-        return redirect()->route('news.index')->with('success', 'News created successfully.');
+        $tags = collect(explode(',', request('tags')));
+
+        $this->tagsSynchronizer->sync($tags, $news);
+
+        return redirect()->route('news.index')->with('success', 'News was created successfully.');
     }
 
     /**
@@ -88,7 +96,11 @@ class NewsController extends Controller
     {
         $news->update($request->all());
 
-        return redirect()->route('admin.news')->with('success', 'News created successfully.');
+        $tags = collect(explode(',', request('tags')));
+
+        $this->tagsSynchronizer->sync($tags, $news);
+
+        return redirect()->route('admin.news')->with('success', 'News was created successfully.');
     }
 
     /**
@@ -102,6 +114,6 @@ class NewsController extends Controller
         $news->delete();
 
         return redirect()->route('admin.news')
-            ->with('success', 'News deleted successfully');
+            ->with('success', 'News was deleted successfully');
     }
 }

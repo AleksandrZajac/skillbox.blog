@@ -18,12 +18,17 @@
                 @endif
                 @csrf
                 <div class="form-group">
-                    <label for="newsName">Название статьи</label>
+                    <label for="newsName">Название новости</label>
                     <input type="text" class="form-control" name="title" id="newsName" value="{{ old('title', $news->title) }}">
                 </div>
                 <div class="form-group">
-                    <label for="description">Детальное описание статьи</label>
+                    <label for="description">Детальное описание новости</label>
                     <textarea class="form-control" id="description" name="description" placeholder="">{{ old('description', $news->description) }}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="inputTags">Добавить тег</label>
+                    <input type="text" class="form-control" id="inputTags" name="tags"
+                    value="{{ old('tags', $news->tags->pluck('name')->implode(',')) }}">
                 </div>
                 <div class="form-group form-check">
                     <input name="is_published" type="hidden" value="0">

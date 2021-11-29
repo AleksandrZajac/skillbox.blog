@@ -13,9 +13,14 @@ class Tag extends Model
         'name',
     ];
 
+    public function news()
+    {
+        return $this->morphedByMany(News::class, 'taggable');
+    }
+
     public function articles()
     {
-        return $this->belongsToMany(Article::class, 'tag_article');
+        return $this->morphedByMany(Article::class, 'taggable');
     }
 
     public function getRouteKeyName()
@@ -23,8 +28,13 @@ class Tag extends Model
         return 'name';
     }
 
-    public static function tagsCloud()
+    public static function articleTagsCloud()
     {
         return (new static)->has('articles')->get();
+    }
+
+    public static function newsTagsCloud()
+    {
+        return (new static)->has('news')->get();
     }
 }

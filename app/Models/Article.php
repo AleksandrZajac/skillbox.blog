@@ -24,12 +24,12 @@ class Article extends Model
 
     public function comments()
     {
-        return $this->hasMany(Comment::class, 'article_id');
+        return $this->morphMany(Comment::class, 'commentable');
     }
 
     public function tags()
     {
-        return $this->belongsToMany(Tag::class, 'tag_article');
+        return $this->morphToMany(Tag::class, 'taggable');
     }
 
     public function scopeIsPublished($query)
