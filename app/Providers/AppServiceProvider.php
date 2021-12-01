@@ -19,6 +19,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(App\Services\TagsSynchronizer::class, function () {
             return new App\Services\TagsSynchronizer();
         });
+
+        $this->app->singleton(App\Services\PortalStatistics::class, function () {
+            return new App\Services\PortalStatistics();
+        });
     }
 
     /**

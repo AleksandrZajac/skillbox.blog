@@ -8,12 +8,16 @@ use App\Models\News;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Services\PortalStatistics;
 
 class AdminController extends Controller
 {
-    public function __construct()
+    private $portalStatistics;
+
+    public function __construct(PortalStatistics $portalStatistics)
     {
         $this->middleware('can:admin');
+        $this->portalStatistics = $portalStatistics;
     }
 
     /**
@@ -62,5 +66,12 @@ class AdminController extends Controller
     public function show(News $news)
     {
         return view('news.show', compact('news'));
+    }
+
+    public function portalStatistics()
+    {
+        $collection = $this->portalStatistics->collection();
+
+        return view('portal.statistics', compact('collection'));
     }
 }

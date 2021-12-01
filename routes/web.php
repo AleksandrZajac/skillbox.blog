@@ -37,10 +37,12 @@ Route::delete('/articles/{article}', [ArticleController::class, 'destroy'])->nam
 
 Route::get('/contacts', [ContactsController::class, 'create']);
 Route::post('/contacts', [ContactsController::class, 'store']);
+
 Route::get('/admin/feedback', [ContactsController::class, 'index']);
 Route::get('/admin/articles', [AdminController::class, 'index'])->name('admin.articles.index');
 Route::get('/admin/articles/{article}/edit', [ArticleController::class, 'edit'])->name('admin.articles.edit');
 Route::get('/admin/articles/{article}/history', [AdminController::class, 'history'])->name('admin.articles.history');
+Route::get('/admin/portal/statistics', [AdminController::class, 'portalStatistics'])->name('admin.portal.statistics');
 
 Route::get('/owner/articles', [OwnerArticleController::class, 'index'])->name('owner.articles.index');
 

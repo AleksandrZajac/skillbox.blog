@@ -22,7 +22,9 @@
         @endforeach
     </div>
     <div class="pt-5">
-        {{ $articles->links() }}
+        @if(method_exists($articles, 'links'))
+            {{ $articles->links() }}
+        @endif
     </div>
 </div>
 
