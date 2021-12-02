@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class TagsSynchronizer
 {
-
-    public function sync(Collection $tags, Model $model)
+    public function sync(Model $model)
     {
         $syncIds = [];
+        $tags = collect(explode(',', request('tags')));
 
         foreach ($tags as $tag) {
             $tag = Tag::firstOrCreate(['name' => $tag]);

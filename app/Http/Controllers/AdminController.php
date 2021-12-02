@@ -70,8 +70,24 @@ class AdminController extends Controller
 
     public function portalStatistics()
     {
-        $collection = $this->portalStatistics->collection();
+        $articlesCount = $this->portalStatistics->getArticlesCount();
+        $newsCount = $this->portalStatistics->getNewsCount();
+        $userNameWhereArticleCountMax = $this->portalStatistics->getUserNameWhereArticleCountMax();
+        $longestArticle = $this->portalStatistics->getLongestArticle();
+        $shortestArticle = $this->portalStatistics->getShortestArticle();
+        $averageNumberOfArticlesByActiveUsers = $this->portalStatistics->getAverageNumberOfArticlesByActiveUsers();
+        $mostVolatileArticle = $this->portalStatistics->getMostVolatileArticle();
+        $mostDiscussedArticle = $this->portalStatistics->getMostDiscussedArticle();
 
-        return view('portal.statistics', compact('collection'));
+        return view('portal.statistics', compact(
+            'articlesCount',
+            'newsCount',
+            'userNameWhereArticleCountMax',
+            'longestArticle',
+            'shortestArticle',
+            'averageNumberOfArticlesByActiveUsers',
+            'mostVolatileArticle',
+            'mostDiscussedArticle',
+        ));
     }
 }

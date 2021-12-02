@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\News;
 use App\Http\Requests\NewsRequest;
 use App\Services\TagsSynchronizer;
@@ -44,7 +43,7 @@ class NewsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\NewsRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(NewsRequest $request)
@@ -56,9 +55,7 @@ class NewsController extends Controller
 
         $news->save();
 
-        $tags = collect(explode(',', request('tags')));
-
-        $this->tagsSynchronizer->sync($tags, $news);
+        $this->tagsSynchronizer->sync($news);
 
         return redirect()->route('news.index')->with('success', 'News was created successfully.');
     }
@@ -88,17 +85,15 @@ class NewsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\NewsRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, News $news)
+    public function update(NewsRequest $request, News $news)
     {
         $news->update($request->all());
 
-        $tags = collect(explode(',', request('tags')));
-
-        $this->tagsSynchronizer->sync($tags, $news);
+        $this->tagsSynchronizer->sync($news);
 
         return redirect()->route('admin.news')->with('success', 'News was created successfully.');
     }

@@ -71,9 +71,7 @@ class ArticleController extends Controller
 
         $article->save();
 
-        $tags = collect(explode(',', request('tags')));
-
-        $this->tagsSynchronizer->sync($tags, $article);
+        $this->tagsSynchronizer->sync($article);
 
         Notification::route('mail', config('mail.to.admin'))
             ->notify(new ArticleNotificationCreated($article, $this->pushAll));
@@ -114,9 +112,7 @@ class ArticleController extends Controller
     {
         $article->update($request->all());
 
-        $tags = collect(explode(',', request('tags')));
-
-        $this->tagsSynchronizer->sync($tags, $article);
+        $this->tagsSynchronizer->sync($article);
 
         Notification::route('mail', config('mail.to.admin'))->notify(new ArticleNotificationUpdated($article));
 
