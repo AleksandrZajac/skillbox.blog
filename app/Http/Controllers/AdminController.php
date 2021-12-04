@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use App\Models\ArticleHistory;
+use App\Models\Comment;
 use App\Models\News;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Http\Request;
@@ -70,14 +71,44 @@ class AdminController extends Controller
 
     public function portalStatistics()
     {
+        $numberOfArticlesPerUser = 1;
         $articlesCount = $this->portalStatistics->getArticlesCount();
         $newsCount = $this->portalStatistics->getNewsCount();
         $userNameWhereArticleCountMax = $this->portalStatistics->getUserNameWhereArticleCountMax();
-        $longestArticle = $this->portalStatistics->getLongestArticle();
+
+        if (Article::first()) {
+            $longestArticle = $this->portalStatistics->getLongestArticle();
+        } else {
+            $longestArticle = new Article();
+            $longestArticle->title = '';
+            $longestArticle->slug = '';
+        }
+
+        if (Article::first()) {
         $shortestArticle = $this->portalStatistics->getShortestArticle();
-        $averageNumberOfArticlesByActiveUsers = $this->portalStatistics->getAverageNumberOfArticlesByActiveUsers();
-        $mostVolatileArticle = $this->portalStatistics->getMostVolatileArticle();
-        $mostDiscussedArticle = $this->portalStatistics->getMostDiscussedArticle();
+        } else {
+            $shortestArticle = new Article();
+            $shortestArticle->title = '';
+            $shortestArticle->slug = '';
+        }
+
+        $averageNumberOfArticlesByActiveUsers = $this->portalStatistics->getAverageNumberOfArticlesByActiveUsers($numberOfArticlesPerUser);
+
+        if (ArticleHistory::first()) {
+            $mostVolatileArticle = $this->portalStatistics->getMostVolatileArticle();
+        } else {
+            $mostVolatileArticle = new Article();
+            $mostVolatileArticle->title = '';
+            $mostVolatileArticle->slug = '';
+        }
+
+        if (Comment::first()) {
+            $mostDiscussedArticle = $this->portalStatistics->getMostDiscussedArticle();
+        } else {
+            $mostDiscussedArticle = new Article();
+            $mostDiscussedArticle->title = '';
+            $mostDiscussedArticle->slug = '';
+        }
 
         return view('portal.statistics', compact(
             'articlesCount',

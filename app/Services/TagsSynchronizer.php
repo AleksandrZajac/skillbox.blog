@@ -8,14 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class TagsSynchronizer
 {
-    public function sync(Model $model)
+    public function sync(string $tags, Model $model)
     {
         $syncIds = [];
-        $tags = collect(explode(',', request('tags')));
+        $tagsCollection = collect(explode(',', $tags));
 
-        foreach ($tags as $tag) {
-            $tag = Tag::firstOrCreate(['name' => $tag]);
-            $syncIds[] = $tag->id;
+        foreach ($tagsCollection  as $tagItem) {
+            $tagItem = Tag::firstOrCreate(['name' => $tagItem]);
+            $syncIds[] = $tagItem->id;
         }
 
         $model->tags()->sync($syncIds);

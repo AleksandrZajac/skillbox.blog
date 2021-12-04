@@ -34,11 +34,7 @@ class PortalStatistics
             ->orderByDesc('description_length')
             ->first();
 
-        return [
-            'title' => $article->title,
-            'link' => route('articles.show', $article->slug),
-            'length' => $article->description_length,
-        ];
+        return $article;
     }
 
     public function getShortestArticle()
@@ -48,66 +44,42 @@ class PortalStatistics
             ->orderBy('description_length')
             ->first();
 
-        return [
-            'title' => $article->title,
-            'link' => route('articles.show', $article->slug),
-            'length' => $article->description_length,
-        ];
+        return $article;
     }
 
-    public function getAverageNumberOfArticlesByActiveUsers()
+    public function getAverageNumberOfArticlesByActiveUsers($numberOfArticlesPerUser)
     {
-        $numberOfArticlesPerUser = 1;
-
-        return DB::table('articles')
+        $article = DB::table('articles')
             ->select(DB::raw('COUNT(*) as count'))
             ->groupBy('owner_id')
             ->havingRaw('count > ?', [$numberOfArticlesPerUser])
             ->avg('count');
+
+        return $article;
     }
 
     public function getMostVolatileArticle()
     {
-        if (ArticleHistory::first()) {
-            $article = ArticleHistory::selectRaw('article_id, count(*) as count_articles')
-                ->groupBy('article_id')
-                ->orderByDesc('count_articles')
-                ->first()
-                ->article;
+        $article = ArticleHistory::selectRaw('article_id, count(*) as count_articles')
+            ->groupBy('article_id')
+            ->orderByDesc('count_articles')
+            ->first()
+            ->article;
 
-            return [
-                'title' => $article->title,
-                'link' => route('articles.show', $article->slug),
-            ];
-        }
-
-        return [
-            'title' => '',
-            'link' => '',
-        ];
+        return $article;
     }
 
     public function getMostDiscussedArticle()
     {
-        if (Comment::first()) {
-            $articleId = Comment::where('commentable_type', Article::class)
-                ->selectRaw('commentable_id, count(*) as count_comments')
-                ->groupBy('commentable_id')
-                ->orderByDesc('count_comments')
-                ->first()
-                ->commentable_id;
+        $articleId = Comment::where('commentable_type', Article::class)
+            ->selectRaw('commentable_id, count(*) as count_comments')
+            ->groupBy('commentable_id')
+            ->orderByDesc('count_comments')
+            ->first()
+            ->commentable_id;
 
-            $article = Article::find($articleId);
+        $article = Article::find($articleId);
 
-            return [
-                'title' => $article->title,
-                'link' => route('articles.show', $article->slug),
-            ];
-        }
-
-        return [
-            'title' => '',
-            'link' => '',
-        ];
+        return $article;
     }
 }

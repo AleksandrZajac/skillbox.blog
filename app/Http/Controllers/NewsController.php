@@ -55,7 +55,7 @@ class NewsController extends Controller
 
         $news->save();
 
-        $this->tagsSynchronizer->sync($news);
+        $this->tagsSynchronizer->sync(request('tags'), $news);
 
         return redirect()->route('news.index')->with('success', 'News was created successfully.');
     }
@@ -93,7 +93,7 @@ class NewsController extends Controller
     {
         $news->update($request->all());
 
-        $this->tagsSynchronizer->sync($news);
+        $this->tagsSynchronizer->sync(request('tags'), $news);
 
         return redirect()->route('admin.news')->with('success', 'News was created successfully.');
     }
