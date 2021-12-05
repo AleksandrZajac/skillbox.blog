@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
-use App\Models\ArticleHistory;
-use App\Models\Comment;
 use App\Models\News;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Services\PortalStatistics;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
@@ -71,44 +70,16 @@ class AdminController extends Controller
 
     public function portalStatistics()
     {
-        $numberOfArticlesPerUser = 1;
+        $minCountOfArticlesForActiveUser = 2;
         $articlesCount = $this->portalStatistics->getArticlesCount();
         $newsCount = $this->portalStatistics->getNewsCount();
         $userNameWhereArticleCountMax = $this->portalStatistics->getUserNameWhereArticleCountMax();
-
-        if (Article::first()) {
-            $longestArticle = $this->portalStatistics->getLongestArticle();
-        } else {
-            $longestArticle = new Article();
-            $longestArticle->title = '';
-            $longestArticle->slug = '';
-        }
-
-        if (Article::first()) {
-        $shortestArticle = $this->portalStatistics->getShortestArticle();
-        } else {
-            $shortestArticle = new Article();
-            $shortestArticle->title = '';
-            $shortestArticle->slug = '';
-        }
-
-        $averageNumberOfArticlesByActiveUsers = $this->portalStatistics->getAverageNumberOfArticlesByActiveUsers($numberOfArticlesPerUser);
-
-        if (ArticleHistory::first()) {
-            $mostVolatileArticle = $this->portalStatistics->getMostVolatileArticle();
-        } else {
-            $mostVolatileArticle = new Article();
-            $mostVolatileArticle->title = '';
-            $mostVolatileArticle->slug = '';
-        }
-
-        if (Comment::first()) {
-            $mostDiscussedArticle = $this->portalStatistics->getMostDiscussedArticle();
-        } else {
-            $mostDiscussedArticle = new Article();
-            $mostDiscussedArticle->title = '';
-            $mostDiscussedArticle->slug = '';
-        }
+        $longestArticle = $this->portalStatistics->getLongestArticle(new DB());
+        $shortestArticle = $this->portalStatistics->getShortestArticle(new DB());
+        $averageNumberOfArticlesByActiveUsers = $this->portalStatistics
+            ->getAverageNumberOfArticlesByActiveUsers($minCountOfArticlesForActiveUser);
+        $mostVolatileArticle = $this->portalStatistics->getMostVolatileArticle(new DB());
+        $mostDiscussedArticle = $this->portalStatistics->getMostDiscussedArticle(new DB());
 
         return view('portal.statistics', compact(
             'articlesCount',

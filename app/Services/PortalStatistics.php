@@ -5,10 +5,7 @@ namespace App\Services;
 use App\Models\Article;
 use App\Models\News;
 use App\Models\User;
-use App\Models\Comment;
-use App\Models\ArticleHistory;
 use Illuminate\Support\Facades\DB;
-
 
 class PortalStatistics
 {
@@ -27,9 +24,9 @@ class PortalStatistics
         return User::withCount('articles')->first()->name;
     }
 
-    public function getLongestArticle()
+    public function getLongestArticle(?DB $db)
     {
-        $article = DB::table('articles')
+        $article = $db::table('articles')
             ->select(DB::raw('LENGTH(description) As description_length, title, slug'))
             ->orderByDesc('description_length')
             ->first();
@@ -37,9 +34,9 @@ class PortalStatistics
         return $article;
     }
 
-    public function getShortestArticle()
+    public function getShortestArticle(?DB $db)
     {
-        $article = DB::table('articles')
+        $article = $db::table('articles')
             ->select(DB::raw('LENGTH(description) As description_length, title, slug'))
             ->orderBy('description_length')
             ->first();
@@ -47,38 +44,38 @@ class PortalStatistics
         return $article;
     }
 
-    public function getAverageNumberOfArticlesByActiveUsers($numberOfArticlesPerUser)
+    public function getAverageNumberOfArticlesByActiveUsers($minCountOfArticlesForActiveUser)
     {
         $article = DB::table('articles')
-            ->select(DB::raw('COUNT(*) as count'))
+            ->select(DB::raw('COUNT(*) as total'))
             ->groupBy('owner_id')
-            ->havingRaw('count > ?', [$numberOfArticlesPerUser])
-            ->avg('count');
+            ->havingRaw('total >= ?', [$minCountOfArticlesForActiveUser])
+            ->avg('total');
 
         return $article;
     }
 
-    public function getMostVolatileArticle()
+    public function getMostVolatileArticle(?DB $db)
     {
-        $article = ArticleHistory::selectRaw('article_id, count(*) as count_articles')
+        $article = $db::table('article_histories')
+            ->select('article_id', 'articles.title', 'articles.slug', DB::raw('count(*) as total'))
+            ->join('articles', 'article_histories.article_id', '=',  'articles.id')
             ->groupBy('article_id')
-            ->orderByDesc('count_articles')
-            ->first()
-            ->article;
+            ->orderBy('total', 'DESC')
+            ->first();
 
         return $article;
     }
 
-    public function getMostDiscussedArticle()
+    public function getMostDiscussedArticle(?DB $db)
     {
-        $articleId = Comment::where('commentable_type', Article::class)
-            ->selectRaw('commentable_id, count(*) as count_comments')
+        $article = $db::table('articles')
+            ->select('articles.title', 'articles.slug', DB::raw('count(commentable_id) as total'))
+            ->join('comments', 'articles.id', '=', 'commentable_id')
+            ->where('commentable_type', 'App\Models\Article')
             ->groupBy('commentable_id')
-            ->orderByDesc('count_comments')
-            ->first()
-            ->commentable_id;
-
-        $article = Article::find($articleId);
+            ->orderBy('total', 'DESC')
+            ->first();
 
         return $article;
     }
