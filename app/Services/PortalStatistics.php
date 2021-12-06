@@ -24,52 +24,52 @@ class PortalStatistics
         return User::withCount('articles')->first()->name;
     }
 
-    public function getLongestArticle(?DB $db)
+    public function getLongestArticle()
     {
-        $article = $db::table('articles')
+        $article = DB::table('articles')
             ->select(DB::raw('LENGTH(description) As description_length, title, slug'))
             ->orderByDesc('description_length')
             ->first();
 
-        return $article;
+        return $article ?? null;
     }
 
-    public function getShortestArticle(?DB $db)
+    public function getShortestArticle()
     {
-        $article = $db::table('articles')
+        $article = DB::table('articles')
             ->select(DB::raw('LENGTH(description) As description_length, title, slug'))
             ->orderBy('description_length')
             ->first();
 
-        return $article;
+        return $article ?? null;
     }
 
-    public function getAverageNumberOfArticlesByActiveUsers($minCountOfArticlesForActiveUser)
+    public function getAverageNumberOfArticlesByActiveUsers()
     {
         $article = DB::table('articles')
             ->select(DB::raw('COUNT(*) as total'))
             ->groupBy('owner_id')
-            ->havingRaw('total >= ?', [$minCountOfArticlesForActiveUser])
+            ->havingRaw('total >= ?', [config('services.portal_statistics.articles.count')])
             ->avg('total');
 
         return $article;
     }
 
-    public function getMostVolatileArticle(?DB $db)
+    public function getMostVolatileArticle()
     {
-        $article = $db::table('article_histories')
+        $article = DB::table('article_histories')
             ->select('article_id', 'articles.title', 'articles.slug', DB::raw('count(*) as total'))
             ->join('articles', 'article_histories.article_id', '=',  'articles.id')
             ->groupBy('article_id')
             ->orderBy('total', 'DESC')
             ->first();
 
-        return $article;
+        return $article ?? null;
     }
 
-    public function getMostDiscussedArticle(?DB $db)
+    public function getMostDiscussedArticle()
     {
-        $article = $db::table('articles')
+        $article = DB::table('articles')
             ->select('articles.title', 'articles.slug', DB::raw('count(commentable_id) as total'))
             ->join('comments', 'articles.id', '=', 'commentable_id')
             ->where('commentable_type', 'App\Models\Article')
@@ -77,6 +77,6 @@ class PortalStatistics
             ->orderBy('total', 'DESC')
             ->first();
 
-        return $article;
+        return $article ?? null;
     }
 }

@@ -74,12 +74,11 @@ class AdminController extends Controller
         $articlesCount = $this->portalStatistics->getArticlesCount();
         $newsCount = $this->portalStatistics->getNewsCount();
         $userNameWhereArticleCountMax = $this->portalStatistics->getUserNameWhereArticleCountMax();
-        $longestArticle = $this->portalStatistics->getLongestArticle(new DB());
-        $shortestArticle = $this->portalStatistics->getShortestArticle(new DB());
-        $averageNumberOfArticlesByActiveUsers = $this->portalStatistics
-            ->getAverageNumberOfArticlesByActiveUsers($minCountOfArticlesForActiveUser);
-        $mostVolatileArticle = $this->portalStatistics->getMostVolatileArticle(new DB());
-        $mostDiscussedArticle = $this->portalStatistics->getMostDiscussedArticle(new DB());
+        $longestArticle = $this->portalStatistics->getLongestArticle();
+        $shortestArticle = $this->portalStatistics->getShortestArticle();
+        $averageNumberOfArticlesByActiveUsers = $this->portalStatistics->getAverageNumberOfArticlesByActiveUsers();
+        $mostVolatileArticle = $this->portalStatistics->getMostVolatileArticle();
+        $mostDiscussedArticle = $this->portalStatistics->getMostDiscussedArticle();
 
         return view('portal.statistics', compact(
             'articlesCount',
