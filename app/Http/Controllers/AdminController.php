@@ -3,17 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
-use App\Models\ArticleHistory;
 use App\Models\News;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Services\PortalStatistics;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
-    public function __construct()
+    private $portalStatistics;
+
+    public function __construct(PortalStatistics $portalStatistics)
     {
         $this->middleware('can:admin');
+        $this->portalStatistics = $portalStatistics;
     }
 
     /**
@@ -62,5 +66,29 @@ class AdminController extends Controller
     public function show(News $news)
     {
         return view('news.show', compact('news'));
+    }
+
+    public function portalStatistics()
+    {
+        $minCountOfArticlesForActiveUser = 2;
+        $articlesCount = $this->portalStatistics->getArticlesCount();
+        $newsCount = $this->portalStatistics->getNewsCount();
+        $userNameWhereArticleCountMax = $this->portalStatistics->getUserNameWhereArticleCountMax();
+        $longestArticle = $this->portalStatistics->getLongestArticle();
+        $shortestArticle = $this->portalStatistics->getShortestArticle();
+        $averageNumberOfArticlesByActiveUsers = $this->portalStatistics->getAverageNumberOfArticlesByActiveUsers();
+        $mostVolatileArticle = $this->portalStatistics->getMostVolatileArticle();
+        $mostDiscussedArticle = $this->portalStatistics->getMostDiscussedArticle();
+
+        return view('portal.statistics', compact(
+            'articlesCount',
+            'newsCount',
+            'userNameWhereArticleCountMax',
+            'longestArticle',
+            'shortestArticle',
+            'averageNumberOfArticlesByActiveUsers',
+            'mostVolatileArticle',
+            'mostDiscussedArticle',
+        ));
     }
 }

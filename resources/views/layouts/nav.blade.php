@@ -22,7 +22,7 @@
             <a class="p-2 text-muted" href="/news">Новости</a>
             <a class="p-2 text-muted" href="/about">О нас</a>
             <a class="p-2 text-muted" href="/contacts">Контакты</a>
-            @if(auth()->check() && ! auth()->user()->isAdmin())
+            @if(auth()->check())
             <a class="p-2 text-muted" href="/owner/articles">Статьи пользователя</a>
             @endif
             <a class="p-2 text-muted" href="/articles/create">Создать статью</a>
@@ -35,6 +35,7 @@
             <a class="p-2 text-muted" href="/admin/news/create">Создать новость</a>
             <a class="p-2 text-muted" href="/admin/news">Список новостей</a>
             <a class="p-2 text-muted" href="/admin/feedback">Список обращений</a>
+            <a class="p-2 text-muted" href="/admin/portal/statistics">Статистика портала</a>
         </nav>
         <hr>
         @endadmin

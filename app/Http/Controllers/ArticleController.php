@@ -71,14 +71,12 @@ class ArticleController extends Controller
 
         $article->save();
 
-        $tags = collect(explode(',', request('tags')));
-
-        $this->tagsSynchronizer->sync($tags, $article);
+        $this->tagsSynchronizer->sync(request('tags'), $article);
 
         Notification::route('mail', config('mail.to.admin'))
             ->notify(new ArticleNotificationCreated($article, $this->pushAll));
 
-        return redirect()->route('articles.index')->with('success', 'Post created successfully.');
+        return redirect()->route('articles.index')->with('success', 'Post was created successfully.');
     }
 
     /**
@@ -114,13 +112,11 @@ class ArticleController extends Controller
     {
         $article->update($request->all());
 
-        $tags = collect(explode(',', request('tags')));
-
-        $this->tagsSynchronizer->sync($tags, $article);
+        $this->tagsSynchronizer->sync(request('tags'), $article);
 
         Notification::route('mail', config('mail.to.admin'))->notify(new ArticleNotificationUpdated($article));
 
-        return redirect()->route('articles.index')->with('success', 'Post updated successfully');
+        return redirect()->route('articles.index')->with('success', 'Post was updated successfully');
     }
 
     /**
@@ -136,6 +132,6 @@ class ArticleController extends Controller
         Notification::route('mail', config('mail.to.admin'))->notify(new ArticleNotificationDeleted($article));
 
         return redirect()->route('articles.index')
-            ->with('success', 'post deleted successfully');
+            ->with('success', 'Post was deleted successfully');
     }
 }

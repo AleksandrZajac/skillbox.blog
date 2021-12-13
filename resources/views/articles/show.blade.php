@@ -18,11 +18,11 @@
         </div>
         @endif
         <div class="blog-post">
-            @include('comments.show')
+            @include('comments.article.show')
         </div>
         @auth
         <h5 class="pt-2">
-            <a class="btn btn-success" href="{{ route('comments.create', $article->slug) }}">
+            <a class="btn btn-success" href="{{ route('article.comments.create', $article->slug) }}">
                 Оставить коментарий
                 <a>
         </h5>

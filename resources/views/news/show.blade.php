@@ -12,11 +12,22 @@
         {{ $news->created_at->toFormattedDateString() }}
         <p>{{ $news->description }}</p>
 
+        <h3>Коментарии</h3>
         @if ($message = Session::get('success'))
         <div class="alert alert-success">
             <p>{{ $message }}</p>
         </div>
         @endif
+        <div class="blog-post">
+            @include('comments.news.show')
+        </div>
+        @auth
+        <h5 class="pt-2">
+            <a class="btn btn-success" href="{{ route('news.comments.create', $news->id) }}">
+                Оставить коментарий
+                <a>
+        </h5>
+        @endauth
         @admin
         <h5 class="pt-2">
             <a class="btn btn-primary" href="{{ route('admin.news.edit', $news->id) }}">
