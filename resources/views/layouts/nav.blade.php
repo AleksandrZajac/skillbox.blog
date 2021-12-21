@@ -36,6 +36,7 @@
             <a class="p-2 text-muted" href="/admin/news">Список новостей</a>
             <a class="p-2 text-muted" href="/admin/feedback">Список обращений</a>
             <a class="p-2 text-muted" href="/admin/portal/statistics">Статистика портала</a>
+            <a class="p-2 text-muted" href="/admin/general/reports/create">Генерировать отчет</a>
         </nav>
         <hr>
         @endadmin

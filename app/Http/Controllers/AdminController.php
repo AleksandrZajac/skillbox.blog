@@ -4,20 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use App\Models\News;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Services\PortalStatistics;
-use Illuminate\Support\Facades\DB;
+use App\Services\GeneralReports;
+use App\Jobs\GeneralReport;
 
 class AdminController extends Controller
 {
     private $portalStatistics;
+    private $generalReports;
 
-    public function __construct(PortalStatistics $portalStatistics)
+    public function __construct(PortalStatistics $portalStatistics, GeneralReports $generalReports)
     {
         $this->middleware('can:admin');
         $this->portalStatistics = $portalStatistics;
+        $this->generalReports = $generalReports;
     }
 
     /**
@@ -70,7 +71,6 @@ class AdminController extends Controller
 
     public function portalStatistics()
     {
-        $minCountOfArticlesForActiveUser = 2;
         $articlesCount = $this->portalStatistics->getArticlesCount();
         $newsCount = $this->portalStatistics->getNewsCount();
         $userNameWhereArticleCountMax = $this->portalStatistics->getUserNameWhereArticleCountMax();
@@ -90,5 +90,17 @@ class AdminController extends Controller
             'mostVolatileArticle',
             'mostDiscussedArticle',
         ));
+    }
+
+    public function createReports()
+    {
+        return view('reports.general');
+    }
+
+    public function sendReports(Request $request)
+    {
+        GeneralReport::dispatch($this->generalReports->getData());
+
+        return redirect()->route('articles.index')->with('success', 'Отчет отправлен на ваш е-мейл');
     }
 }
