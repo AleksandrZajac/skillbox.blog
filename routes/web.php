@@ -60,5 +60,7 @@ Route::get('/admin/news/{news}', [AdminController::class, 'show'])->name('admin.
 Route::get('/admin/news/{news}/edit', [NewsController::class, 'edit'])->name('admin.news.edit');
 Route::patch('/admin/news/{news}', [NewsController::class, 'update'])->name('admin.news.update');
 Route::delete('/admin/news/{news}', [NewsController::class, 'destroy'])->name('admin.news.destroy');
+Route::get('/admin/general/reports/create', [AdminController::class, 'createReports'])->name('admin.general.reports.create');
+Route::post('/admin/general/reports', [AdminController::class, 'sendReports'])->name('admin.general.reports.send');
 
 Auth::routes();
