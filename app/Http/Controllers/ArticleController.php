@@ -6,15 +6,12 @@ use App\Notifications\ArticleNotificationCreated;
 use App\Notifications\ArticleNotificationDeleted;
 use App\Notifications\ArticleNotificationUpdated;
 use App\Models\Article;
-use App\Models\Comment;
 use App\Models\User;
 use App\Http\Requests\ArticleRequest;
+use App\Services\WebSocket;
 use App\Services\TagsSynchronizer;
 use Illuminate\Support\Facades\Notification;
 use App\Services\PushAll;
-
-
-use Illuminate\Support\Facades\DB;
 
 class ArticleController extends Controller
 {
@@ -56,7 +53,7 @@ class ArticleController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\ArticleReques  $request
+     * @param  App\Http\Requests\ArticleRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(ArticleRequest $request)
@@ -73,8 +70,8 @@ class ArticleController extends Controller
 
         $this->tagsSynchronizer->sync(request('tags'), $article);
 
-        Notification::route('mail', config('mail.to.admin'))
-            ->notify(new ArticleNotificationCreated($article, $this->pushAll));
+        $user = User::find(auth()->id());
+        $user->notify(new ArticleNotificationCreated($article, $this->pushAll));
 
         return redirect()->route('articles.index')->with('success', 'Post was created successfully.');
     }
@@ -87,6 +84,7 @@ class ArticleController extends Controller
      */
     public function show(Article $article)
     {
+
         return view('articles.show', compact('article'));
     }
 
@@ -114,9 +112,9 @@ class ArticleController extends Controller
 
         $this->tagsSynchronizer->sync(request('tags'), $article);
 
-        Notification::route('mail', config('mail.to.admin'))->notify(new ArticleNotificationUpdated($article));
+        WebSocket::user()->notify(new ArticleNotificationUpdated($article, WebSocket::subscribe()));
 
-        return redirect()->route('articles.index')->with('success', 'Post was updated successfully');
+        return redirect()->route('articles.show', $article->slug)->with('success', 'Post was updated successfully');
     }
 
     /**

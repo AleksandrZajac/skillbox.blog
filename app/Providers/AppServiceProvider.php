@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Subscribe;
+use App\Services\WebSocket;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Pagination\Paginator;
@@ -37,6 +39,13 @@ class AppServiceProvider extends ServiceProvider
             $view->with([
                 'articleTagsCloud' => Tag::articleTagsCloud(),
                 'newsTagsCloud' => Tag::newsTagsCloud(),
+            ]);
+        });
+
+        view()->composer('layouts.websocket', function ($view) {
+
+            $view->with([
+                'subscribe' => WebSocket::subscribe(),
             ]);
         });
 
