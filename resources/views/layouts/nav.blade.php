@@ -26,7 +26,9 @@
             <a class="p-2 text-muted" href="/owner/articles">Статьи пользователя</a>
             @endif
             <a class="p-2 text-muted" href="/articles/create">Создать статью</a>
-            <a class="p-2 text-muted" href="/subscribe">Подписка</a>
+            @if(auth()->check())
+            <a class="p-2 text-muted" href="{{ route('subscribe.show', auth()->user()->id) }}">Подписка</a>
+            @endif
         </nav>
         @admin
         <hr>

@@ -54,7 +54,7 @@ class ArticleNotificationUpdated extends Notification implements ShouldBroadcast
 
     public function broadcastOn()
     {
-        return new PrivateChannel('web-socket.' . $this->subscribe->id);
+        return new PrivateChannel('socket.' . $this->subscribe->id);
     }
 
     /**

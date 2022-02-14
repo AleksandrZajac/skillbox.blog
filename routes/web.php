@@ -66,6 +66,5 @@ Route::post('/admin/general/reports', [AdminController::class, 'sendReports'])->
 
 Auth::routes();
 
-Route::get('/subscribe', [SubscribeController::class, 'index'])->name('subscribe.index');
-
-Route::post('/subscribe/web-socket', [SubscribeController::class, 'index'])->name('subscribe.index');
+Route::get('/subscribe/{user_id}', [SubscribeController::class, 'show'])->name('subscribe.show');
+Route::get('/show/subscribe', [SubscribeController::class, 'showSubscribe'])->name('subscribe.showSubscribe');

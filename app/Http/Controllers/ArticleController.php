@@ -72,8 +72,6 @@ class ArticleController extends Controller
 
         $this->tagsSynchronizer->sync(request('tags'), $article);
 
-//        Notification::route('mail', config('mail.to.admin'))
-//            ->notify(new ArticleNotificationCreated($article, $this->pushAll));
         $user = User::find(auth()->id());
         $user->notify(new ArticleNotificationCreated($article, $this->pushAll));
 
@@ -88,18 +86,6 @@ class ArticleController extends Controller
      */
     public function show(Article $article)
     {
-//        $subscribeId = User::all();
-//        dd($subscribeId);
-//        $subscribes = auth()->user()->subscribes;
-//        $subscribe = $subscribes->contains(2);
-//        dd($subscribe);
-//        $subscribe = Subscribe::where('name', '=', 'web-socket')->first();
-////        dd($subscribe);
-//        $user = User::find(auth()->id());
-//        print_r($user->subscribes);
-//        if(session('web-socket')) {
-//            dd(session('web-socket'));
-//        };
 
         return view('articles.show', compact('article'));
     }
@@ -127,13 +113,6 @@ class ArticleController extends Controller
         $article->update($request->all());
 
         $this->tagsSynchronizer->sync(request('tags'), $article);
-
-//        Notification::route('mail', config('mail.to.admin'))->notify(new ArticleNotificationUpdated($article));
-
-//        $user = User::find(auth()->id());
-//        $subscribe = Subscribe::where('name', '=', 'web-socket')->first();
-//
-//        $user->notify(new ArticleNotificationUpdated($article, $subscribe));
 
         WebSocket::user()->notify(new ArticleNotificationUpdated($article, WebSocket::subscribe()));
 
