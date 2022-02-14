@@ -26,6 +26,7 @@
             <a class="p-2 text-muted" href="/owner/articles">Статьи пользователя</a>
             @endif
             <a class="p-2 text-muted" href="/articles/create">Создать статью</a>
+            <a class="p-2 text-muted" href="/subscribe">Подписка</a>
         </nav>
         @admin
         <hr>

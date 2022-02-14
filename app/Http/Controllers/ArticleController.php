@@ -6,15 +6,12 @@ use App\Notifications\ArticleNotificationCreated;
 use App\Notifications\ArticleNotificationDeleted;
 use App\Notifications\ArticleNotificationUpdated;
 use App\Models\Article;
-use App\Models\Comment;
 use App\Models\User;
 use App\Http\Requests\ArticleRequest;
+use App\Services\WebSocket;
 use App\Services\TagsSynchronizer;
 use Illuminate\Support\Facades\Notification;
 use App\Services\PushAll;
-
-
-use Illuminate\Support\Facades\DB;
 
 class ArticleController extends Controller
 {
@@ -38,6 +35,8 @@ class ArticleController extends Controller
     {
         $articles = Article::latest()->isPublished()->paginate(10);
 
+
+
         return view('articles.index', compact('articles'));
     }
 
@@ -56,7 +55,7 @@ class ArticleController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\ArticleReques  $request
+     * @param  App\Http\Requests\ArticleRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(ArticleRequest $request)
@@ -73,8 +72,10 @@ class ArticleController extends Controller
 
         $this->tagsSynchronizer->sync(request('tags'), $article);
 
-        Notification::route('mail', config('mail.to.admin'))
-            ->notify(new ArticleNotificationCreated($article, $this->pushAll));
+//        Notification::route('mail', config('mail.to.admin'))
+//            ->notify(new ArticleNotificationCreated($article, $this->pushAll));
+        $user = User::find(auth()->id());
+        $user->notify(new ArticleNotificationCreated($article, $this->pushAll));
 
         return redirect()->route('articles.index')->with('success', 'Post was created successfully.');
     }
@@ -87,6 +88,19 @@ class ArticleController extends Controller
      */
     public function show(Article $article)
     {
+//        $subscribeId = User::all();
+//        dd($subscribeId);
+//        $subscribes = auth()->user()->subscribes;
+//        $subscribe = $subscribes->contains(2);
+//        dd($subscribe);
+//        $subscribe = Subscribe::where('name', '=', 'web-socket')->first();
+////        dd($subscribe);
+//        $user = User::find(auth()->id());
+//        print_r($user->subscribes);
+//        if(session('web-socket')) {
+//            dd(session('web-socket'));
+//        };
+
         return view('articles.show', compact('article'));
     }
 
@@ -114,9 +128,16 @@ class ArticleController extends Controller
 
         $this->tagsSynchronizer->sync(request('tags'), $article);
 
-        Notification::route('mail', config('mail.to.admin'))->notify(new ArticleNotificationUpdated($article));
+//        Notification::route('mail', config('mail.to.admin'))->notify(new ArticleNotificationUpdated($article));
 
-        return redirect()->route('articles.index')->with('success', 'Post was updated successfully');
+//        $user = User::find(auth()->id());
+//        $subscribe = Subscribe::where('name', '=', 'web-socket')->first();
+//
+//        $user->notify(new ArticleNotificationUpdated($article, $subscribe));
+
+        WebSocket::user()->notify(new ArticleNotificationUpdated($article, WebSocket::subscribe()));
+
+        return redirect()->route('articles.show', $article->slug)->with('success', 'Post was updated successfully');
     }
 
     /**

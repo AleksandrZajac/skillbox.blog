@@ -3,25 +3,31 @@
 namespace App\Notifications;
 
 use App\Models\Article;
+use App\Models\Subscribe;
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class ArticleNotificationUpdated extends Notification
+class ArticleNotificationUpdated extends Notification implements ShouldBroadcast
 {
     use Queueable;
 
-    private $srticle;
+    private $article;
+    public $subscribe;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(Article $article)
+    public function __construct(Article $article, Subscribe $subscribe)
     {
         $this->article = $article;
+        $this->subscribe = $subscribe;
     }
 
     /**
@@ -32,7 +38,23 @@ class ArticleNotificationUpdated extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail', 'broadcast'];
+    }
+
+    public function toBroadcast($notifiable)
+    {
+        $history = array_reverse($this->article->history->toArray());
+        return new BroadcastMessage([
+            'title' => $this->article->title,
+            'history_before' => $history[0]['pivot']['before'],
+            'history_after' => $history[0]['pivot']['after'],
+            'action' => 'Перейти на статью: ' . url('/articles/' . $this->article->slug),
+        ]);
+    }
+
+    public function broadcastOn()
+    {
+        return new PrivateChannel('web-socket.' . $this->subscribe->id);
     }
 
     /**
