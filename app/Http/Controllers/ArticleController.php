@@ -111,8 +111,6 @@ class ArticleController extends Controller
         $article->update($request->all());
 
         $this->tagsSynchronizer->sync(request('tags'), $article);
-//        $user = User::find(auth()->id());
-//        $user->user()->notify(new ArticleNotificationUpdated($article));
 
         WebSocket::user()->notify(new ArticleNotificationUpdated($article));
 
