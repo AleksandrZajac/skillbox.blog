@@ -27,7 +27,7 @@
 
 <script>
 export default {
-  props: ["subscribe", "user"],
+  // props: ["user"],
   data() {
     return {
       modalToggle: false,
@@ -35,7 +35,7 @@ export default {
     };
   },
   mounted() {
-    Echo.private("socket." + this.subscribe.id).notification((notification) => {
+    Echo.private("web-socket").notification((notification) => {
       setTimeout(() => {
         this.textMessage = notification;
         this.modalToggle = true;
@@ -50,9 +50,6 @@ export default {
     showModal: function (val) {
       $(this.$refs.modal).modal(val ? "show" : "hide");
     },
-    // showNotification: function (notification) {
-    //     return notification;
-    // },
   },
 };
 </script>

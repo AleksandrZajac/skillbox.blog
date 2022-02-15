@@ -18,6 +18,6 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
 
-Broadcast::channel('socket.{subscribe_id}', function ($user, $subscribe_id) {
-    return $user->subscribes->contains($subscribe_id);
+Broadcast::channel('web-socket', function ($user) {
+    return (int) $user->role_id === (int) env('ADMIN_ROLE_ID');
 });

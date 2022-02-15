@@ -42,12 +42,12 @@ class AppServiceProvider extends ServiceProvider
             ]);
         });
 
-        view()->composer('layouts.websocket', function ($view) {
-
-            $view->with([
-                'subscribe' => WebSocket::subscribe(),
-            ]);
-        });
+//        view()->composer('layouts.websocket', function ($view) {
+//
+//            $view->with([
+//                'subscribe' => WebSocket::subscribe(),
+//            ]);
+//        });
 
         Blade::if('admin', function () {
             if (auth()->user()) {

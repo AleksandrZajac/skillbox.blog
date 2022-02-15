@@ -1,4 +1,5 @@
-@if (Auth::check() && $subscribe)
+@if (Auth::check())
 
-<web-socket :subscribe="{{ $subscribe }}" :user="{{ Auth::user() }}"></web-socket>
+<web-socket></web-socket>
+
 @endif

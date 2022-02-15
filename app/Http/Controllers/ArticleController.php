@@ -33,9 +33,10 @@ class ArticleController extends Controller
      */
     public function index()
     {
+//        dd(User::find(auth()->id())->role_id);
+
+//        dd((int)env('ADMIN_ROLE_ID'));
         $articles = Article::latest()->isPublished()->paginate(10);
-
-
 
         return view('articles.index', compact('articles'));
     }
@@ -113,8 +114,10 @@ class ArticleController extends Controller
         $article->update($request->all());
 
         $this->tagsSynchronizer->sync(request('tags'), $article);
+//        $user = User::find(auth()->id());
+//        $user->user()->notify(new ArticleNotificationUpdated($article));
 
-        WebSocket::user()->notify(new ArticleNotificationUpdated($article, WebSocket::subscribe()));
+        WebSocket::user()->notify(new ArticleNotificationUpdated($article));
 
         return redirect()->route('articles.show', $article->slug)->with('success', 'Post was updated successfully');
     }
