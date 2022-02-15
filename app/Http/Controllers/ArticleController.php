@@ -33,9 +33,6 @@ class ArticleController extends Controller
      */
     public function index()
     {
-//        dd(User::find(auth()->id())->role_id);
-
-//        dd((int)env('ADMIN_ROLE_ID'));
         $articles = Article::latest()->isPublished()->paginate(10);
 
         return view('articles.index', compact('articles'));
