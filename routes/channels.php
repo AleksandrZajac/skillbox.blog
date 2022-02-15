@@ -19,5 +19,5 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 });
 
 Broadcast::channel('web-socket', function ($user) {
-    return (int) $user->role_id === (int) env('ADMIN_ROLE_ID');
+    return $user->isAdmin();
 });
