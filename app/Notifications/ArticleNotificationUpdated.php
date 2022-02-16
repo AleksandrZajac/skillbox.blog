@@ -3,16 +3,20 @@
 namespace App\Notifications;
 
 use App\Models\Article;
+use \App\Models\ArticleHistory;
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class ArticleNotificationUpdated extends Notification
+class ArticleNotificationUpdated extends Notification implements ShouldBroadcast
 {
     use Queueable;
 
-    private $srticle;
+    private $article;
 
     /**
      * Create a new notification instance.
@@ -32,7 +36,24 @@ class ArticleNotificationUpdated extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail', 'broadcast'];
+    }
+
+    public function toBroadcast($notifiable)
+    {
+        $history = ArticleHistory::where('article_id', $this->article->id)->latest()->first();
+
+        return new BroadcastMessage([
+            'title' => $this->article->title,
+            'history_before' => $history->before,
+            'history_after' => $history->after,
+            'action' => 'Перейти на статью: ' . url('/articles/' . $this->article->slug),
+        ]);
+    }
+
+    public function broadcastOn()
+    {
+        return new PrivateChannel('web-socket');
     }
 
     /**
