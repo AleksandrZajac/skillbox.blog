@@ -33,7 +33,11 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::latest()->isPublished()->paginate(10);
+        $page = request('page') ?? '1';
+
+        $articles = \Cache::tags(['articles'])->remember('uses_articles|' . $page, 3600, function () {
+            return Article::latest()->isPublished()->paginate(10);
+        });
 
         return view('articles.index', compact('articles'));
     }
@@ -84,6 +88,9 @@ class ArticleController extends Controller
      */
     public function show(Article $article)
     {
+        $article = \Cache::tags(['article'])->remember('show_article|' . $article->id, 3600, function () use ($article) {
+            return $article;
+        });
 
         return view('articles.show', compact('article'));
     }

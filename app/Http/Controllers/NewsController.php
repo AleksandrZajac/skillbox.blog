@@ -24,7 +24,11 @@ class NewsController extends Controller
      */
     public function index()
     {
-        $news = News::latest()->isPublished()->paginate(10);
+        $page = request('page') ?? '1';
+
+        $news = \Cache::tags(['news'])->remember('uses_published_news|' . $page, 3600 , function () {
+            return News::latest()->isPublished()->paginate(10);
+        });
 
         return view('news.index', compact('news'));
     }
@@ -68,6 +72,10 @@ class NewsController extends Controller
      */
     public function show(News $news)
     {
+        $news = \Cache::tags(['news'])->remember('show_news|' . $news->id, 3600, function () use ($news) {
+            return $news;
+        });
+
         return view('news.show', compact('news'));
     }
 

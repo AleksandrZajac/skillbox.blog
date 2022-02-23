@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             ArticlesSeeder::class,
             TagsArticlesSeeder::class,
             NewsSeeder::class,
+            TagsNewsSeeder::class,
         ]);
     }
 }

@@ -42,4 +42,21 @@ class Article extends Model
         return $this->belongsToMany(User::class, 'article_histories')
             ->withPivot(['before', 'after'])->withTimestamps();
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function () {
+            \Cache::tags(['articles', 'article'])->flush();
+        });
+
+        static::updated(function () {
+            \Cache::tags(['articles', 'article'])->flush();
+        });
+
+        static::deleted(function () {
+            \Cache::tags(['articles', 'article'])->flush();
+        });
+    }
 }
