@@ -52,11 +52,6 @@ class User extends Authenticatable
         return $this->hasMany(Comment::class, 'owner_id');
     }
 
-    public function subscribes()
-    {
-        return $this->belongsToMany(Subscribe::class);
-    }
-
     public function role()
     {
         return $this->belongsTo(Role::class, 'role_id');

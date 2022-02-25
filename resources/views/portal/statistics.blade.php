@@ -10,47 +10,47 @@
             </h3>
 
             <div class="blog-post">
-                <p><b>Количество статей: </b>{{ $articlesCount }}</p>
+                <p><b>Количество статей: </b>{{ $articleStatistics['articlesCount'] }}</p>
                 <hr>
                 <p><b>Количество новостей: </b>{{ $newsCount }}</p>
                 <hr>
-                <p><b>ФИО автора, у которого больше всего статей на сайте: </b>{{ $userNameWhereArticleCountMax }}</p>
+                <p><b>ФИО автора, у которого больше всего статей на сайте: </b>{{ $articleStatistics['userNameWhereArticleCountMax'] }}</p>
                 <hr>
-                @if($longestArticle)
-                <p><b>Самая длинная статья: </b>{{ $longestArticle->title }}</p>
+                @if($articleStatistics['longestArticle'])
+                <p><b>Самая длинная статья: </b>{{ $articleStatistics['longestArticle']->title }}</p>
                 <p><b>Ссылка на статью: </b>
-                    <a href="{{ route('articles.show', $longestArticle->slug) }}">
-                        {{ route('articles.show', $longestArticle->slug) }}
+                    <a href="{{ route('articles.show', $articleStatistics['longestArticle']->slug) }}">
+                        {{ route('articles.show', $articleStatistics['longestArticle']->slug) }}
                     </a>
                 </p>
-                <p><b>Длина статьи в символах: </b>{{ $longestArticle->description_length }}</p>
+                <p><b>Длина статьи в символах: </b>{{ $articleStatistics['longestArticle']->description_length }}</p>
                 @else
                 <p><b>Самая длинная статья: </b>Нет статей</p>
                 <p><b>Ссылка на статью: </b></p>
                 <p><b>Длина статьи в символах: </b></p>
                 @endif
                 <hr>
-                @if($shortestArticle)
-                <p><b>Самая короткая статья: </b>{{ $shortestArticle->title }}</p>
+                @if($articleStatistics['shortestArticle'])
+                <p><b>Самая короткая статья: </b>{{ $articleStatistics['shortestArticle']->title }}</p>
                 <p><b>Ссылка на статью: </b>
-                    <a href="{{ route('articles.show', $shortestArticle->slug) }}">
-                        {{ route('articles.show', $shortestArticle->slug) }}
+                    <a href="{{ route('articles.show', $articleStatistics['shortestArticle']->slug) }}">
+                        {{ route('articles.show', $articleStatistics['shortestArticle']->slug) }}
                     </a>
                 </p>
-                <p><b>Длина статьи в символах: </b>{{ $shortestArticle->description_length }}</p>
+                <p><b>Длина статьи в символах: </b>{{ $articleStatistics['shortestArticle']->description_length }}</p>
                 @else
                 <p><b>Самая короткая статья: </b>Нет статей</p>
                 <p><b>Ссылка на статью: </b></p>
                 <p><b>Длина статьи в символах: </b></p>
                 @endif
                 <hr>
-                <p><b>Средние количество статей у активных пользователей: </b>{{ $averageNumberOfArticlesByActiveUsers }}</p>
+                <p><b>Средние количество статей у активных пользователей: </b>{{ $articleStatistics['averageNumberOfArticlesByActiveUsers'] }}</p>
                 <hr>
-                @if($mostVolatileArticle)
-                <p><b>Самая непостоянная статья: </b>{{ $mostVolatileArticle->title }}</p>
+                @if($articleStatistics['mostVolatileArticle'])
+                <p><b>Самая непостоянная статья: </b>{{ $articleStatistics['mostVolatileArticle']->title }}</p>
                 <p><b>Ссылка на статью: </b>
-                    <a href="{{ route('articles.show', $mostVolatileArticle->slug) }}">
-                        {{route('articles.show', $mostVolatileArticle->slug) }}
+                    <a href="{{ route('articles.show', $articleStatistics['mostVolatileArticle']->slug) }}">
+                        {{route('articles.show', $articleStatistics['mostVolatileArticle']->slug) }}
                     </a>
                 </p>
                 @else
@@ -58,11 +58,11 @@
                 <p><b>Ссылка на статью: </b></p>
                 @endif
                 <hr>
-                @if($mostDiscussedArticle)
-                <p><b>Самая обсуждаемая статья: </b>{{ $mostDiscussedArticle->title }}</p>
+                @if($articleStatistics['mostDiscussedArticle'])
+                <p><b>Самая обсуждаемая статья: </b>{{ $articleStatistics['mostDiscussedArticle']->title }}</p>
                 <p><b>Ссылка на статью: </b>
-                    <a href="{{ route('articles.show', $mostDiscussedArticle->slug) }}">
-                        {{ route('articles.show', $mostDiscussedArticle->slug) }}
+                    <a href="{{ route('articles.show', $articleStatistics['mostDiscussedArticle']->slug) }}">
+                        {{ route('articles.show', $articleStatistics['mostDiscussedArticle']->slug) }}
                     </a></p>
                 @else
                 <p><b>Самая обсуждаемая статья: </b>Нет ни одной обсуждаемой статьи</p>

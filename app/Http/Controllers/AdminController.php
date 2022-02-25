@@ -28,7 +28,11 @@ class AdminController extends Controller
      */
     public function index()
     {
-        $articles = Article::latest()->paginate(20);
+        $page = request('page') ?? '1';
+
+        $articles = \Cache::tags(['articles'])->remember('uses_admin_articles|' . $page, 3600, function () {
+            return Article::latest()->paginate(20);
+        });
 
         return view('articles.index', compact('articles'));
     }
@@ -42,6 +46,10 @@ class AdminController extends Controller
      */
     public function history(Article $article)
     {
+        $article = \Cache::tags(['article'])->remember('show_article_history|' . $article->id, 3600, function () use ($article) {
+            return $article;
+        });
+
         return view('articles.history', compact('article'));
     }
 
@@ -53,7 +61,13 @@ class AdminController extends Controller
      */
     public function news()
     {
-        $news = News::latest()->paginate(20);
+        $page = request('page') ?? '1';
+
+        $news = \Cache::tags(['news'])->remember('uses_admin_news|' . $page, 3600 , function () {
+            return News::latest()->paginate(20);ished()->paginate(10);
+        });
+
+        //$news = News::latest()->paginate(20);
 
         return view('news.index', compact('news'));
     }
@@ -71,25 +85,32 @@ class AdminController extends Controller
 
     public function portalStatistics()
     {
-        $articlesCount = $this->portalStatistics->getArticlesCount();
-        $newsCount = $this->portalStatistics->getNewsCount();
-        $userNameWhereArticleCountMax = $this->portalStatistics->getUserNameWhereArticleCountMax();
-        $longestArticle = $this->portalStatistics->getLongestArticle();
-        $shortestArticle = $this->portalStatistics->getShortestArticle();
-        $averageNumberOfArticlesByActiveUsers = $this->portalStatistics->getAverageNumberOfArticlesByActiveUsers();
-        $mostVolatileArticle = $this->portalStatistics->getMostVolatileArticle();
-        $mostDiscussedArticle = $this->portalStatistics->getMostDiscussedArticle();
+        $newsCount = \Cache::tags(['news'])->remember('news_count|', 3600, function () {
+            return $this->portalStatistics->getNewsCount();
+        });
 
-        return view('portal.statistics', compact(
-            'articlesCount',
-            'newsCount',
-            'userNameWhereArticleCountMax',
-            'longestArticle',
-            'shortestArticle',
-            'averageNumberOfArticlesByActiveUsers',
-            'mostVolatileArticle',
-            'mostDiscussedArticle',
-        ));
+        $articleStatistics = \Cache::tags(['article'])->remember('article_statistics|', 3600, function () {
+
+            $articlesCount = $this->portalStatistics->getArticlesCount();
+            $userNameWhereArticleCountMax = $this->portalStatistics->getUserNameWhereArticleCountMax();
+            $longestArticle = $this->portalStatistics->getLongestArticle();
+            $shortestArticle = $this->portalStatistics->getShortestArticle();
+            $averageNumberOfArticlesByActiveUsers = $this->portalStatistics->getAverageNumberOfArticlesByActiveUsers();
+            $mostVolatileArticle = $this->portalStatistics->getMostVolatileArticle();
+            $mostDiscussedArticle = $this->portalStatistics->getMostDiscussedArticle();
+
+            return [
+                'articlesCount' => $articlesCount,
+                'userNameWhereArticleCountMax' => $userNameWhereArticleCountMax,
+                'longestArticle' => $longestArticle,
+                'shortestArticle' => $shortestArticle,
+                'averageNumberOfArticlesByActiveUsers' => $averageNumberOfArticlesByActiveUsers,
+                'mostVolatileArticle' => $mostVolatileArticle,
+                'mostDiscussedArticle' => $mostDiscussedArticle,
+            ];
+        });
+
+        return view('portal.statistics', compact('newsCount', 'articleStatistics'));
     }
 
     public function createReports()

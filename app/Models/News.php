@@ -29,4 +29,21 @@ class News extends Model
     {
         return $this->morphToMany(Tag::class, 'taggable');
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function () {
+            \Cache::tags(['news'])->flush();
+        });
+
+        static::updated(function () {
+            \Cache::tags(['news'])->flush();
+        });
+
+        static::deleted(function () {
+            \Cache::tags(['news'])->flush();
+        });
+    }
 }

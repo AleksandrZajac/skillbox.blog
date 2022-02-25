@@ -8,7 +8,6 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\OwnerArticleController;
 use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\NewsController;
-use App\Http\Controllers\SubscribeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,6 +64,3 @@ Route::get('/admin/general/reports/create', [AdminController::class, 'createRepo
 Route::post('/admin/general/reports', [AdminController::class, 'sendReports'])->name('admin.general.reports.send');
 
 Auth::routes();
-
-Route::get('/subscribe/{user_id}', [SubscribeController::class, 'show'])->name('subscribe.show');
-Route::get('/show/subscribe', [SubscribeController::class, 'showSubscribe'])->name('subscribe.showSubscribe');
